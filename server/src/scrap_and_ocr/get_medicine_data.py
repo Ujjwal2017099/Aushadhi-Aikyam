@@ -27,7 +27,7 @@ s=Service('./chromedriver.exe')
 driver = webdriver.Chrome(service=s)
 
 
-def get_med_data(url=None, med_container_class=None, med_name_class=None, med_price_class=None, med_price_id=None, bit=None):
+def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=None, med_price_container=None):
     med_dict = dict()
 
     driver.get(url)
@@ -39,13 +39,13 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, med_pr
         med_name = medicine.find_all(class_ = med_name_class)[0].contents[0]
         med_price = 0
         med_price_string = ''
-        if bit == 1 and med_price_id:
-            price_list = medicine.find_all(id=med_price_id)[0].contents
+        if bit == 1:
+            price_list = medicine.find_all(id=med_price_container)[0].contents
             for item in price_list:
                 if type(item) != bs4.element.Tag:
                     med_price_string += item
-        elif bit == 0 and med_price_class:
-            price_list = medicine.find_all(class_ = med_price_class)[0].contents
+        elif bit == 0:
+            price_list = medicine.find_all(class_ = med_price_container)[0].contents
             for item in price_list:
                 if type(item) != bs4.element.Tag:
                     med_price_string += item
@@ -90,7 +90,7 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, med_pr
 # med_price_class = 'ProductCard_ourPrice__yDytt'
 #
 # # For class
-# pprint(get_med_data(url, med_container_class, med_name_class, None, med_price_id, bit))
+# pprint(get_med_data(url, med_container_class, med_name_class, bit, med_price_container))
 #
 # # For id
-# pprint(get_med_data(url, med_container_class, med_name_class, None, med_price_id, bit))
+# pprint(get_med_data(url, med_container_class, bit, med_price_container))
