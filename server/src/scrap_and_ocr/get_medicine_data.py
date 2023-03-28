@@ -16,7 +16,7 @@ for id : 1
 '''
 
 from pprint import pprint
-import re
+import re, json
 
 import bs4
 from bs4 import BeautifulSoup
@@ -57,7 +57,7 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
         med_dict[med_name] = med_price
 
     # pprint(med_dict)
-    return med_dict
+    return json.dumps(med_dict)
 
 
 
