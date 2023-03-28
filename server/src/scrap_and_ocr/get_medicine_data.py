@@ -38,6 +38,7 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
 
     for medicine in all_medicines_in_single_page:
         med_name = medicine.find_all(class_ = med_name_class)[0].contents[0]
+        med_name = re.sub('\W+',' ', med_name)
         med_price = 0
         med_price_string = ''
         if bit == 1:
