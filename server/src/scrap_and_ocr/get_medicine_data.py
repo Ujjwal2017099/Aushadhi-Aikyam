@@ -28,43 +28,50 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
     s = Service('./chromedriver.exe')
     driver = webdriver.Chrome(service=s)
 
+    bad_response = json.dumps(dict({"B_R": 404}))
+
     med_dict = dict()
 
-    driver.get(url)
-    soup = BeautifulSoup(driver.page_source, 'lxml')
+    try:
+        driver.get(url)
+        soup = BeautifulSoup(driver.page_source, 'lxml')
 
-    all_medicines_in_single_page = soup.find_all(class_ = med_container_class)
-    count = 0
+        all_medicines_in_single_page = soup.find_all(class_ = med_container_class)
+        count = 0
 
-    for medicine in all_medicines_in_single_page:
-        med_name = medicine.find_all(class_ = med_name_class)[0].contents[0]
-        med_name = re.sub('\W+',' ', med_name)
-        med_price = 0
-        med_price_string = ''
-        if bit == 1:
-            price_list = medicine.find_all(id=med_price_container)[0].contents
-            for item in price_list:
-                if type(item) != bs4.element.Tag:
-                    med_price_string += item
-        elif bit == 0:
-            price_list = medicine.find_all(class_ = med_price_container)[0].contents
-            for item in price_list:
-                if type(item) != bs4.element.Tag:
-                    med_price_string += item
-        else:
-            return json.dumps(dict({"B_R": 404}))
+        for medicine in all_medicines_in_single_page:
+            med_name = medicine.find_all(class_ = med_name_class)[0].contents[0]
+            med_name = re.sub('\W+',' ', med_name)
+            med_price = 0
+            med_price_string = ''
+            if bit == 1:
+                price_list = medicine.find_all(id=med_price_container)[0].contents
+                for item in price_list:
+                    if type(item) != bs4.element.Tag:
+                        med_price_string += item
+            elif bit == 0:
+                price_list = medicine.find_all(class_ = med_price_container)[0].contents
+                for item in price_list:
+                    if type(item) != bs4.element.Tag:
+                        med_price_string += item
+            else:
+                return bad_response
 
-        med_price = float(re.findall('\d*\.*\d+', med_price_string)[0])
+            med_price = float(re.findall('\d*\.*\d+', med_price_string)[0])
 
-        med_dict[med_name] = med_price
-        count += 1
+            med_dict[med_name] = med_price
+            count += 1
 
-        if count == 5:
-            break
+            if count == 5:
+                break
 
-    # pprint(med_dict)
-    driver.quit()
-    return json.dumps(med_dict)
+        # pprint(med_dict)
+        driver.quit()
+        return json.dumps(med_dict)
+
+    except:
+        driver.quit()
+        return bad_response
 
 
 
