@@ -2,21 +2,48 @@ const express = require('express');
 const app = express();
 const port = 8000;
 const {PythonShell} = require("python-shell");
+require("./connection/connection");
+const Link = require("./models/link");
 
 app.get('/',async (req,res)=>{
-    // console.log(req.query);
-    let options = {
-        mode: "text",
-        pythonOptions: ["-u"], 
-        args: [req.query.url,req.query.med_container_class,req.query.med_name_class,req.query.bit,req.query.med_price_class], 
-    };
-    let x= await PythonShell.run("src/scrap_and_ocr/get_medicine_data.py", options, function (err, result) {
-        if (err) console.log(err);
-    });
-    let ans = "";
-    for(let i=0;i<x.length;i++) ans +=x[i];
-    // ans = ans.slice(2,ans.length-2);
-    res.send(JSON.parse(ans));
+    let ans = [];
+    let complete = false;
+    try {
+        let name = req.query.name;
+        let webData = await Link.find();
+        // console.log(name);
+        await webData.forEach(async (e)=>{
+            let str = e.url;
+            let arr = str.split('^');
+            str = arr[0]+name;
+            for(let i=1;i<arr.length;i++) str += arr[i];
+            e.url = str
+            let options = {
+                mode: "text",
+                pythonOptions: ["-u"],
+                args: [str,e.mainContainer,e.container,e.bit,e.priceContainer]
+            };
+            let x = await PythonShell.run(
+                "src/scrap_and_ocr/get_medicine_data.py",
+                options,
+                function (err, result) {
+                    if (err) console.log(err);
+                }
+            );
+            let temp = "";
+            for (let i = 0; i < x.length; i++) temp += x[i];
+            temp = JSON.parse(temp);
+            temp.name = e.name;
+            ans.push(temp);
+            if (ans.length===4) res.send(ans);
+        })
+        // res.status(200).send(ans);
+        console.log(ans);
+    } catch (error) {
+        console.log(error);
+        res.status(400).send("error");
+    }
+    
 })
 app.listen(port,()=>{
     console.log("server started");
