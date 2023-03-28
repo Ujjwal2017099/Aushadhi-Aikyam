@@ -23,11 +23,12 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
-s=Service('./chromedriver.exe')
-driver = webdriver.Chrome(service=s)
-
 
 def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=None, med_price_container=None):
+
+    s=Service('./chromedriver.exe')
+    driver = webdriver.Chrome(service=s)
+
     med_dict = dict()
 
     driver.get(url)
@@ -57,6 +58,7 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
         med_dict[med_name] = med_price
 
     # pprint(med_dict)
+    driver.quit()
     return json.dumps(med_dict)
 
 
