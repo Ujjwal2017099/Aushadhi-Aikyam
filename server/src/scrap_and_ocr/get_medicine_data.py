@@ -25,8 +25,7 @@ from selenium.webdriver.chrome.service import Service
 
 
 def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=None, med_price_container=None):
-
-    s=Service('./chromedriver.exe')
+    s = Service('./chromedriver.exe')
     driver = webdriver.Chrome(service=s)
 
     med_dict = dict()
@@ -35,6 +34,7 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
     soup = BeautifulSoup(driver.page_source, 'lxml')
 
     all_medicines_in_single_page = soup.find_all(class_ = med_container_class)
+    count = 0
 
     for medicine in all_medicines_in_single_page:
         med_name = medicine.find_all(class_ = med_name_class)[0].contents[0]
@@ -52,11 +52,15 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
                 if type(item) != bs4.element.Tag:
                     med_price_string += item
         else:
-            return {"Bad Response" : 404}
+            return json.dumps(dict({"B_R": 404}))
 
         med_price = float(re.findall('\d*\.*\d+', med_price_string)[0])
 
         med_dict[med_name] = med_price
+        count += 1
+
+        if count == 5:
+            break
 
     # pprint(med_dict)
     driver.quit()
