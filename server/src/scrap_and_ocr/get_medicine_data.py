@@ -17,7 +17,7 @@ for id : 1
 
 from pprint import pprint
 import re, json
-
+from collections import defaultdict
 import bs4
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -30,16 +30,18 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
 
     bad_response = json.dumps(dict({"B_R": 404}))
 
-    med_dict = dict()
+
+    res_dict = defaultdict(dict)
 
     try:
         driver.get(url)
         soup = BeautifulSoup(driver.page_source, 'lxml')
 
         all_medicines_in_single_page = soup.find_all(class_ = med_container_class)
-        count = 0
+        count = 1
 
         for medicine in all_medicines_in_single_page:
+            med_dict = dict()
             med_name = medicine.find_all(class_ = med_name_class)[0].contents[0]
             med_name = re.sub('\W+',' ', med_name)
             med_price = 0
@@ -59,15 +61,20 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
 
             med_price = float(re.findall('\d*\.*\d+', med_price_string)[0])
 
-            med_dict[med_name] = med_price
+            # med_dict[med_name] = med_price
+            med_dict['name'] = med_name
+            med_dict['price'] = med_price
+
+            res_dict[count] = med_dict
+
             count += 1
 
-            if count == 5:
+            if count == 6:
                 break
 
         # pprint(med_dict)
         driver.quit()
-        return json.dumps(med_dict)
+        return json.dumps(res_dict)
 
     except:
         driver.quit()
