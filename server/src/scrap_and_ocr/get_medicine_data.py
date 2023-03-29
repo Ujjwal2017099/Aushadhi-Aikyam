@@ -65,7 +65,7 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
             med_dict['name'] = med_name
             med_dict['price'] = med_price
 
-            res_dict[count] = med_dict
+            res_dict[chr(count+96)] = med_dict
 
             count += 1
 
