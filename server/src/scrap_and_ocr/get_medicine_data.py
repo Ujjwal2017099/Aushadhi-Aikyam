@@ -31,14 +31,14 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
     bad_response = json.dumps(dict({"B_R": 404}))
 
 
-    res_dict = defaultdict(dict)
+    res_list = list()
 
     try:
         driver.get(url)
         soup = BeautifulSoup(driver.page_source, 'lxml')
 
         all_medicines_in_single_page = soup.find_all(class_ = med_container_class)
-        count = 1
+        count = 0
 
         for medicine in all_medicines_in_single_page:
             med_dict = dict()
@@ -65,16 +65,16 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
             med_dict['name'] = med_name
             med_dict['price'] = med_price
 
-            res_dict[chr(count+96)] = med_dict
+            res_list.append(med_dict)
 
             count += 1
 
-            if count == 6:
+            if count == 5:
                 break
 
         # pprint(med_dict)
         driver.quit()
-        return json.dumps(res_dict)
+        return json.dumps(res_list)
 
     except:
         driver.quit()
