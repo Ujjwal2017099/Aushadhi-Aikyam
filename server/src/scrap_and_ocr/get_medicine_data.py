@@ -15,9 +15,7 @@ for class : 0
 for id : 1
 '''
 
-from pprint import pprint
 import re, json
-from collections import defaultdict
 import bs4
 from bs4 import BeautifulSoup
 from selenium import webdriver
