@@ -4,6 +4,15 @@ const port = 8000;
 const {PythonShell} = require("python-shell");
 require("./connection/connection");
 const Link = require("./models/link");
+const cors = require("cors");
+
+
+const corsOptions = {
+    origin: "http://localhost:3000",
+    optionsSuccessStatus: 200,
+};
+app.use(express.json());
+app.use(cors(corsOptions));
 
 app.get('/',async (req,res)=>{
     let ans = [];
@@ -33,7 +42,10 @@ app.get('/',async (req,res)=>{
             let temp = "";
             for (let i = 0; i < x.length; i++) temp += x[i];
             temp = JSON.parse(temp);
-            temp.name = e.name;
+            let company = e.name;
+            temp.forEach((e)=>{
+                e.company = company
+            })
             ans.push(temp);
             if (ans.length===4) res.send(ans);
         })
@@ -45,6 +57,7 @@ app.get('/',async (req,res)=>{
     }
     
 })
+
 app.listen(port,()=>{
     console.log("server started");
 })

@@ -1,43 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './style.css'
-import {Link} from 'react-router-dom'
+// import {Link} from 'react-router-dom'
 import health from '../assets/donate.png'
 import $ from "jquery";
+import axios from 'axios'
 
 const Main = () => {
-  const data = [
-    {
-      name : "Dolo",
-      price : 123,
-      link : 'https://www.google.com',
-      source : '1mg'
-    },
-    {
-      name : "Dolo",
-      price : 123,
-      link : 'https://www.google.com',
-      source : '1mg'
-    },
-    {
-      name : "Dolo",
-      price : 123,
-      link : 'https://www.google.com',
-      source : '1mg'
-    },
-    {
-      name : "Dolo",
-      price : 123,
-      link : 'https://www.google.com',
-      source : '1mg'
-    },
-    {
-      name : "Dolo",
-      price : 123,
-      link : 'https://www.google.com',
-      source : '1mg'
-    }
-  ]
+  const [data,setData] = useState([]);
 
+  
+  const getData = ()=>{
+    axios({
+      method: "GET",
+      headers: { 'content-type': 'application/json' },
+      url: `http://localhost:8000/?name=dolo`,
+    }).then((res)=>{
+      setData(res.data);
+      // console.log(res.data);
+    }).catch((err)=>{
+      // console.log(err);
+    })
+  }
 
   function functionAlert(msg, myYes) {
      var confirmBox = $("#confirm");
@@ -48,10 +31,10 @@ const Main = () => {
      confirmBox.find(".yes").click(myYes);
      confirmBox.show();
   }
-  
+  // const search = ["a","b","c","d","e"];
   return (
     <div className='main-main'>
-        <form action="" onSubmit={(e)=>{e.preventDefault();functionAlert()}} >
+        <form action="" onSubmit={(e)=>{e.preventDefault();functionAlert();getData()}} >
             <input type="text" placeholder='Enter medicine name' required/>
             <button type="submit">Search</button>
         </form>
@@ -64,20 +47,28 @@ const Main = () => {
       </div>
       <span>
 
-        {data&&<table className='data'>
+        {data.length===0 ? <></>:<table className='data'>
           <tr className='data-row table-header'>
-            <td>Name</td>
             <td>Supplier</td>
+            <td>Name</td>
             <td>Cost</td>
           </tr>
             {
               data.map((e)=>{
+                
                 return (
-                <tr className='data-row'>
-                  <td><Link to={e.link}>{e.name}</Link></td>
-                  <td><Link to={e.link}>{e.source}</Link></td>
-                  <td ><p className='price'>{e.price}/-</p></td>
-                </tr>
+                  <>
+                  {
+                    e.map((el)=>{
+                      return <tr className='data-row'>
+                        <td>{el.company}</td>
+                        <td>{el.name}</td>
+                        <td>{el.price}</td>
+
+                      </tr>
+                    })
+                  }
+                  </>
                 )
               })
             }
