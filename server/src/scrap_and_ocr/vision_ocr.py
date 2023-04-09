@@ -28,4 +28,4 @@ def detect_text(path):
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
 
-# detect_text('pres_paper.jpeg')
+detect_text(r'C:\Users\Ujjwal\Pictures\medicine\pres_paper.jpeg')

@@ -27,18 +27,21 @@ from selenium.webdriver.chrome.service import Service
 
 
 
-def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=None, med_price_container=None):
+
+def get_med_data(url=None, med_container_class=None, med_name_class=None, price_bit=None, med_price_container=None, link_bit=None, link_container=None):
     s = Service('./chromedriver.exe')
     driver = webdriver.Chrome(service=s)
 
-    bad_response = json.dumps(dict({"B_R": 404}))
-
+    bad_response = json.dumps([dict({"B_R": 404})])
 
     res_list = list()
 
     try:
         driver.get(url)
         soup = BeautifulSoup(driver.page_source, 'lxml')
+
+        idx = [m.start() for m in re.finditer(r"/",url)][2]
+        base_url = url[:idx]
 
         all_medicines_in_single_page = soup.find_all(class_ = med_container_class)
         count = 0
@@ -48,25 +51,43 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
             med_name = medicine.find_all(class_ = med_name_class)[0].contents[0]
             med_name = re.sub('\W+',' ', med_name)
             med_price = 0
+            link = None
             med_price_string = ''
-            if bit == 1:
+            # print(med_name)
+            if price_bit == 1:
                 price_list = medicine.find_all(id=med_price_container)[0].contents
                 for item in price_list:
                     if type(item) != bs4.element.Tag:
                         med_price_string += item
-            elif bit == 0:
+            elif price_bit == 0:
+                # print(price_bit)
                 price_list = medicine.find_all(class_ = med_price_container)[0].contents
+                # print(price_list)
                 for item in price_list:
                     if type(item) != bs4.element.Tag:
                         med_price_string += item
             else:
+                # print("jhantu")
                 return bad_response
 
             med_price = float(re.findall('\d*\.*\d+', med_price_string)[0])
 
+            if link_bit == 0:
+                if link_container == med_container_class:
+                    link = medicine.contents[0].get('href')
+                    # print(link)
+                else:
+                    link = medicine.find(class_=link_container).get('href')
+            elif link_bit == 1:
+                link = medicine.find(id=link_container).get('href')
+            else:
+                link = None
+
+
             # med_dict[med_name] = med_price
             med_dict['name'] = med_name
             med_dict['price'] = med_price
+            med_dict['link'] = base_url+link
 
             res_list.append(med_dict)
 
@@ -82,6 +103,7 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, bit=No
     except:
         driver.quit()
         return bad_response
+
 
 
 
@@ -124,6 +146,10 @@ med_container_class = sys.argv[2]
 med_name_class = sys.argv[3]
 bit = sys.argv[4]
 med_price_class = sys.argv[5]
+link_bit = sys.argv[6]
+link_container = sys.argv[7]
 
 b = int(bit)
-print(get_med_data(url, med_container_class, med_name_class, b, med_price_class))
+lb = int(link_bit)
+# print(url, med_container_class, med_name_class, b, med_price_class, lb, link_container)
+print(get_med_data(url, med_container_class, med_name_class, b, med_price_class, lb, link_container))

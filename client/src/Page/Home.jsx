@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Main from '../Components/Main'
 import HeroSection from '../Components/HeroSection'
+
 
 const Home = () => {
   const style = {
@@ -9,10 +10,12 @@ const Home = () => {
     width:'100%',
     alignItems:'center'
   }
+ 
+
   return (
     <div style={style}>
       <HeroSection/>
-      <Main/>
+      <Main />
     </div>
   )
 }

@@ -1,27 +1,52 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './style.css'
-// import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import health from '../assets/donate.png'
 import $ from "jquery";
 import axios from 'axios'
+import { Audio } from 'react-loader-spinner'
 
 const Main = () => {
   const [data,setData] = useState([]);
-
-  
+  const [search , setSearch] = useState("");
+  const [loader,setLoder] = useState(false)
   const getData = ()=>{
     axios({
       method: "GET",
       headers: { 'content-type': 'application/json' },
-      url: `http://localhost:8000/?name=dolo`,
+      url: `http://localhost:8000/?name=${search}`,
     }).then((res)=>{
       setData(res.data);
+      setLoder(false);
       // console.log(res.data);
     }).catch((err)=>{
       // console.log(err);
     })
   }
-
+  const [history,setHistory] = useState([]);
+  useEffect(()=>{
+    if(search.length){
+      const token = JSON.parse(localStorage.getItem('id'));
+      axios({
+        method: 'GET',
+        headers: {'content-type' : 'application/json'},
+        url: `http://localhost:8000/profile?token=${token}`
+      })
+      .then((res)=>{
+        setHistory(res.data.History);
+        history.push(search);
+        axios({
+          method:'POST',
+          headers : {'content-type' : 'application/json'},
+          url: 'http://localhost:8000/userhistory',
+          data  : JSON.stringify({token,history})
+        })
+      })
+      .catch((err)=>{
+  
+      })
+    }
+  },[data])
   function functionAlert(msg, myYes) {
      var confirmBox = $("#confirm");
      confirmBox.find(".message").text(msg);
@@ -31,11 +56,10 @@ const Main = () => {
      confirmBox.find(".yes").click(myYes);
      confirmBox.show();
   }
-  // const search = ["a","b","c","d","e"];
   return (
     <div className='main-main'>
-        <form action="" onSubmit={(e)=>{e.preventDefault();functionAlert();getData()}} >
-            <input type="text" placeholder='Enter medicine name' required/>
+        <form action="" onSubmit={(e)=>{e.preventDefault(); setLoder(true);setData([]); functionAlert();getData()}} >
+            <input type="text" placeholder='Enter medicine name' value={search} onChange={(e)=>{setSearch(e.target.value)}} required/>
             <button type="submit">Search</button>
         </form>
       <div id='confirm'>
@@ -46,7 +70,20 @@ const Main = () => {
         </span>
       </div>
       <span>
-
+        {
+          loader&&<div className='loader'>
+            <Audio
+                    height="80"
+                    width="80"
+                    radius="9"
+                    color="#3485E9"
+                    ariaLabel="loading"
+                    wrapperStyle
+                    wrapperClass
+                    
+                  />
+          </div>
+        }
         {data.length===0 ? <></>:<table className='data'>
           <tr className='data-row table-header'>
             <td>Supplier</td>
@@ -60,12 +97,13 @@ const Main = () => {
                   <>
                   {
                     e.map((el)=>{
-                      return <tr className='data-row'>
-                        <td>{el.company}</td>
-                        <td>{el.name}</td>
-                        <td>{el.price}</td>
-
-                      </tr>
+                      if(el.B_R!==404){
+                        return <tr className='data-row'>
+                          <td><Link to={el.link} target='_blank'>{el.company}</Link></td>
+                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                          <td>{el.price}</td>
+                        </tr>
+                      }
                     })
                   }
                   </>

@@ -24,6 +24,14 @@ const linkSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+    },
+    linkBit : {
+        type : Number,
+        required : true
+    },
+    linkContainer : {
+        type : String,
+        required : true
     }
 });
 
