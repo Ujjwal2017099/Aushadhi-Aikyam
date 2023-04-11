@@ -1,3 +1,4 @@
+import sys
 def detect_text(path):
     """Detects text in the file."""
     from google.cloud import vision
@@ -10,17 +11,18 @@ def detect_text(path):
     image = vision.Image(content=content)
 
     response = client.text_detection(image=image)
+    # print(response)
     texts = response.text_annotations
-    print('Texts:')
+    # print('Texts:')
 
     for text in texts:
         if (len(text.description) >= 5):
             print('\n"{}"'.format(text.description))
 
-            vertices = (['({},{})'.format(vertex.x, vertex.y)
-                        for vertex in text.bounding_poly.vertices])
+            # vertices = (['({},{})'.format(vertex.x, vertex.y)
+            #             for vertex in text.bounding_poly.vertices])
 
-            print('bounds: {}'.format(','.join(vertices)))
+            # print('bounds: {}'.format(','.join(vertices)))
 
     if response.error.message:
         raise Exception(
@@ -28,4 +30,4 @@ def detect_text(path):
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
 
-# detect_text('pres_paper.jpeg')
+detect_text(sys.argv[1])

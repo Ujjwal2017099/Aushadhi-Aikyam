@@ -8,6 +8,9 @@ a{
     color: #000;
     font-family: 'Quicksand';
 }
+.loader{
+    margin: 35px 5px;
+}
 #confirm{
     display: none;
     margin-top: 20px;
@@ -41,14 +44,26 @@ a{
     padding: 15px 20px;
     box-sizing: border-box;
 }
-.hero-main img{
-    width: 30%;
+.hero-main div img{
+    width: 100%;
 }
 .hero-main span{
     width: 65%;
     display: flex;
     flex-direction: column;
     gap: 50px;
+}
+.hero-main span div{
+    background-color: #4fcc4f;
+    font-family: 'Quicksand';
+    width: max-content;
+    padding: 5px 8px;
+    box-sizing: border-box;
+    margin-left: 50px;
+    border-radius: 3px;
+    border: 1px solid #5889d3;
+    cursor: pointer;
+    font-weight: 500;
 }
 .hero-main h1{
     width: 100%;
@@ -145,7 +160,7 @@ a{
     background-color: #F7941D;
 }
 .data{
-    width: 60%;
+    width: 90%;
     margin: 55px 0px;
     font-size: 20px;
     font-family: 'DM Sans';
@@ -168,4 +183,41 @@ a{
     padding: 5px 7px;
     border-radius: 3px;
     cursor: default;
+}
+
+
+
+
+.extract-form{
+    padding: 20px;
+    border: 1px solid #000;
+    margin : 30px 0px;
+}
+.extract-form button{
+    background-color: #F7941D;
+    padding: 5px 5px;
+    margin-top: 10px;
+    font-family: 'Poppins';
+    cursor: pointer;
+    border: 1px solid #ff8c00;
+}
+
+.extract-data-item input{
+    padding: 15px;
+    text-align: left;
+    background-color: #4fcc4f;
+    font-family: 'Poppins';
+    outline:none;
+}
+.extract-instruction{
+    font-weight: 700;
+    font-family: 'Poppins';
+    font-size: 20px;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    color: red;
+}
+.clear{
+    width: 15px;
+    cursor: pointer;
 }
