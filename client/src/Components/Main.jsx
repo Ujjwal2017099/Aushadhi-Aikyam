@@ -6,10 +6,10 @@ import $ from "jquery";
 import axios from 'axios'
 import { Audio } from 'react-loader-spinner'
 
-const Main = () => {
-  const [data,setData] = useState([]);
+const Main = ({data,setData,loader,setLoder}) => {
+  
   const [search , setSearch] = useState("");
-  const [loader,setLoder] = useState(false)
+  
   const getData = ()=>{
     axios({
       method: "GET",
@@ -25,8 +25,8 @@ const Main = () => {
   }
   const [history,setHistory] = useState([]);
   useEffect(()=>{
-    if(search.length){
-      const token = JSON.parse(localStorage.getItem('id'));
+    const token = JSON.parse(localStorage.getItem('id'));
+    if(search.length && token.length){
       axios({
         method: 'GET',
         headers: {'content-type' : 'application/json'},
@@ -84,7 +84,8 @@ const Main = () => {
                   />
           </div>
         }
-        {data.length===0 ? <></>:<table className='data'>
+        {data.length===0 ? <></>:
+        <table className='data'>
           <tr className='data-row table-header'>
             <td>Supplier</td>
             <td>Name</td>

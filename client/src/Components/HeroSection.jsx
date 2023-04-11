@@ -6,14 +6,14 @@ import './style.css'
 import axios from 'axios'
 import Avatar from './Avatar'
 
-const HeroSection = () => {
+const HeroSection = ({setText,setLoder}) => {
     const [head,sethead] = useState("");
     const [coordinate,setCoordinate] = useState([0,0]);
+    
     const headContent = [
         "Welcome to Aushadhi Aikyam...",
         "Compare your prescription cost from different websites..."
     ]
-    
     
     setTimeout(()=>{
         let i=coordinate[0],j=coordinate[1];
@@ -35,34 +35,68 @@ const HeroSection = () => {
   const [Name,setName] = useState("");
 
   useEffect(()=>{
-    const url = `http://localhost:8000/profile?token=${token}`
-    
-    const options = {
-        method: "GET",
-        headers: { 'content-type': 'application/json' },
-        url
-    };
-    axios(options)
-    .then((res)=>{
-        // console.log(res.data);
-        if(res.data){
-            setName(res.data.Name)
-        }
-    }).catch((err)=>{
-      // console.log(err);
-    })
-  },[])
+    if(token.length){
+        const url = `http://localhost:8000/profile?token=${token}`
+        
+        const options = {
+            method: "GET",
+            headers: { 'content-type': 'application/json' },
+            url
+        };
+        axios(options)
+        .then((res)=>{
+            // console.log(res.data);
+            if(res.data){
+                setName(res.data.Name)
+            }
+        }).catch((err)=>{
+          // console.log(err);
+        })
+    }
+  },[token])
+    const [file,setFile] = useState(null); 
     const logout = ()=>{
         localStorage.setItem('id',JSON.stringify(""));
         setName('');
+    }
+    const uploadPrescription = (e)=>{
+        e.preventDefault();
+        // console.log(file[0]);
+        setLoder(true)
+        
+        const form = new FormData();
+        form.append('file',file[0]);
+        // console.log(form);
+        axios({
+            method : 'POST',
+            url : 'http://localhost:8000/getFile',
+            headers: { 'content-type': "multipart/form-data" },
+            data : form
+        }).then((res)=>{
+            // let r = "";
+            // for(let i=1;i<res.data.length;i++){
+            //     const arr = res.data[i].split(' ');
+            //     arr.map((e)=>{
+            //         r += e+"%20"
+            //     })
+            //     r+="^^"
+            // }
+            setLoder(false)
+            setText(res.data);
+            // console.log(res.data);
+            // navigate(`/editPrescription/?${r}`)
+            
+        }).catch((err)=>{
+            console.log(err);
+        })
     }
   return (
     <div className='hero-main'>
         <span>
             <h1>{head+'|'}</h1>
-            <form action="">
+            <form action="" onSubmit={uploadPrescription}>
                 <button type="submit"><img src={search} alt="" /></button>
-                <input className='file-input' type="file" required/>
+                <input className='file-input' type="file" onChange={(e)=>{setFile(e.target.files)}} required/>
             </form>
             <span style={{display:'flex',flexDirection:'row',gap:'0px',marginTop:'50px'}}>
                 {!Name&&<div className="login-btn"><Link to='/Login'>Login</Link></div>}

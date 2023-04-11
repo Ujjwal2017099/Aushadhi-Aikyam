@@ -8,6 +8,7 @@ const cors = require("cors");
 const User = require('./models/user')
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
+const fileUpload = require('express-fileupload') 
 
 const corsOptions = {
     origin: "http://localhost:3000",
@@ -15,6 +16,7 @@ const corsOptions = {
 };
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use(fileUpload());
 
 app.get('/',async (req,res)=>{
     let ans = [];
@@ -29,7 +31,7 @@ app.get('/',async (req,res)=>{
             str = arr[0]+name;
             for(let i=1;i<arr.length;i++) str += arr[i];
             e.url = str
-            console.log(e);
+            // console.log(e);
             let options = {
                 mode: "text",
                 pythonOptions: ["-u"],
@@ -52,7 +54,7 @@ app.get('/',async (req,res)=>{
             ans.push(temp);
             if (ans.length===4) res.send(ans);
         })
-        console.log(ans);
+        // console.log(ans);
     } catch (error) {
         console.log(error);
         res.status(400).send("error");
@@ -107,7 +109,7 @@ app.get('/profile',async (req,res)=>{
             else{
             const r = await User.find({Email:user.Email,Password:user.Password});
             // console.log(r);
-                res.json({Email : r[0].Email,Name : r[0].Name,History : r[0].History});
+                if(r.length)res.json({Email : r[0].Email,Name : r[0].Name,History : r[0].History});
             }
         })
     }catch(err){
@@ -141,6 +143,40 @@ app.post('/userhistory',(req,res)=>{
     }
 })
 
+app.post('/getFile', async (req,res)=>{
+
+    try {
+        if(req.files){
+            const file = req.files.file;
+            const name = Date.now() + file.name;
+            const path = __dirname + '/uploads/' + name;
+
+            file.mv(path , (err)=>{
+                if(err) return res.sendStatus(500);
+                console.log('file uploaded successfully');
+            })
+            let options = {
+                mode: "text",
+                pythonOptions: ["-u"],
+                args: [path]
+            };
+            let x = await PythonShell.run(
+                "src/scrap_and_ocr/vision_ocr.py",
+                options,
+                function (err, result) {
+                    if (err) console.log(err);
+                }
+            );
+            // console.log(x);
+            res.status(200).send(x);
+        }else{
+            return res.sendStatus(400);
+        }     
+    } catch (error) {
+        return res.sendStatus(400);
+    }
+
+})
 app.listen(port,()=>{
     console.log("server started");
 })

@@ -184,3 +184,40 @@ a{
     border-radius: 3px;
     cursor: default;
 }
+
+
+
+
+.extract-form{
+    padding: 20px;
+    border: 1px solid #000;
+    margin : 30px 0px;
+}
+.extract-form button{
+    background-color: #F7941D;
+    padding: 5px 5px;
+    margin-top: 10px;
+    font-family: 'Poppins';
+    cursor: pointer;
+    border: 1px solid #ff8c00;
+}
+
+.extract-data-item input{
+    padding: 15px;
+    text-align: left;
+    background-color: #4fcc4f;
+    font-family: 'Poppins';
+    outline:none;
+}
+.extract-instruction{
+    font-weight: 700;
+    font-family: 'Poppins';
+    font-size: 20px;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    color: red;
+}
+.clear{
+    width: 15px;
+    cursor: pointer;
+}
