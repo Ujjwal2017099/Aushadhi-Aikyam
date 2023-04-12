@@ -1,4 +1,5 @@
 import React from 'react'
+import './style.css'
 
 const Avatar = ({Name}) => {
     const style = {
@@ -14,8 +15,8 @@ const Avatar = ({Name}) => {
         color : '#fff'
     }
   return (
-    <div style={{width:'30%'}}>
-        <div style={style}>
+    <div  style={{width:'30%'}}>
+        <div className='shadow'style={style}>
             {Name[0]}
         </div>
     </div>

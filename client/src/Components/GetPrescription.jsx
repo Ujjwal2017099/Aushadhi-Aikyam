@@ -105,7 +105,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
   return (
     <>
       <h2 className='extract-instruction' >*Please remove the medicines you don't want and check the spellings and remove all the unwanted special characters (including " , ' etc.)</h2>
-        <form className='extract-form' onSubmit={handleSubmit} >
+        <form className='extract-form shadow' onSubmit={handleSubmit} >
             <table className='extract-data-table' >
               {
                 arr.map((e)=>{
