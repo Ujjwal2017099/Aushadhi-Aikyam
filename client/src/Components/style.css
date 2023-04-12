@@ -11,6 +11,10 @@ a{
 .loader{
     margin: 35px 5px;
 }
+/* ---------------------------------------------------------------------- */
+
+ 
+/* ------------------------------------------------------------------- */
 #confirm{
     display: none;
     margin-top: 20px;
@@ -35,6 +39,13 @@ a{
 }
 
 /* hero section  */
+.login-btn{
+    font-family: 'Poppins';
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+}
 .hero-main{
     width: 100%;
     background-color: #3485E9;
@@ -43,6 +54,7 @@ a{
     justify-content: space-between;
     padding: 15px 20px;
     box-sizing: border-box;
+    clip-path: polygon(30% 0%, 70% 0%, 100% 0, 100% 91%, 63% 100%, 22% 91%, 0 99%, 0 0);
 }
 .hero-main div img{
     width: 100%;
@@ -64,6 +76,10 @@ a{
     border: 1px solid #5889d3;
     cursor: pointer;
     font-weight: 500;
+}
+.hero-main span div:hover{
+    box-shadow: 0px 0px 8px 0px #000;
+    transition: 100ms ease-out;
 }
 .hero-main h1{
     width: 100%;
@@ -192,6 +208,10 @@ a{
     padding: 20px;
     border: 1px solid #000;
     margin : 30px 0px;
+    border-radius: 5px;
+}
+.extract-form:hover{
+    border: 0px;
 }
 .extract-form button{
     background-color: #F7941D;
@@ -200,6 +220,10 @@ a{
     font-family: 'Poppins';
     cursor: pointer;
     border: 1px solid #ff8c00;
+    border-radius: 3px;
+}
+.extract-form button:hover{
+    box-shadow: 0px 0px 8px 0px #000;
 }
 .extract-data-item{
     background-color: #b4d2f7;
@@ -208,11 +232,16 @@ a{
 .extract-data-item input{
     padding: 15px;
     text-align: left;
-    background-color: #609ce7;
+    background-color: #b4d2f7;
     font-family: 'Poppins';
     outline:none;
     border-radius: 7px;
     border: 0px;
+}
+.extract-data-item:hover{
+    box-shadow: 0px 0px 8px 0px #000;
+    transition: 100ms ease-out;;
+    margin: 0px 2px;
 }
 .extract-instruction{
     font-weight: 700;
@@ -225,4 +254,9 @@ a{
 .clear{
     width: 15px;
     cursor: pointer;
+}
+
+.shadow:hover{
+    box-shadow: 0px 0px 8px 0px #000;
+    transition: 100ms ease-out;
 }

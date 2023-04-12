@@ -91,21 +91,23 @@ const HeroSection = ({setText,setLoder}) => {
         })
     }
   return (
-    <div className='hero-main'>
+    <div className='hero-main '>
         <span>
             <h1>{head+'|'}</h1>
             <form action="" onSubmit={uploadPrescription}>
-                <button type="submit"><img src={search} alt="" /></button>
-                <input className='file-input' type="file" onChange={(e)=>{setFile(e.target.files)}} required/>
+                <button  type="submit"><img  src={search} alt="" /></button>
+                <input className='file-input ' type="file" onChange={(e)=>{setFile(e.target.files)}} required/>
             </form>
             <span style={{display:'flex',flexDirection:'row',gap:'0px',marginTop:'50px'}}>
                 {!Name&&<div className="login-btn"><Link to='/Login'>Login</Link></div>}
                 {!Name&&<div className="login-btn" style={{marginLeft:'5px'}} ><Link to='/Signup'>Signup</Link></div>}
-                {Name&&<div className="login-btn" onClick={logout}>Logout</div>}
             </span>
         </span>
         <div style={{width:'30%',display:'flex',flexDirection:'column',alignItems:'flex-end'}}>
-            {Name&&<Link to='/profile' target='_blank'><Avatar Name={Name}/></Link>}
+            <div style={{display:'flex',alignItems:'center',gap:'25px'}}>
+                {Name&&<Link to='/profile' target='_blank'><Avatar Name={Name}/></Link>}
+                {Name&&<div className="login-btn shadow" style={{backgroundColor:'#F7941D'}} onClick={logout}>Logout</div>}
+            </div>
             <img src={icon} alt="" />
         </div>
     </div>

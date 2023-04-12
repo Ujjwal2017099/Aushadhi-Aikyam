@@ -56,7 +56,7 @@ const Login = () => {
         .then((res)=>{
             // console.log(res.data);
             const token =res.data;
-            if(token.length){
+            if(token && token.length){
                 localStorage.setItem('id',JSON.stringify(token));
                 navigate(`/`)
                 // console.log(token);
