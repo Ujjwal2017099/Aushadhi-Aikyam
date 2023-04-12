@@ -1,0 +1,223 @@
+@import url(https://fonts.googleapis.com/css?family=Quicksand:300,regular,500,600,700);
+@import url(https://fonts.googleapis.com/css?family=DM+Sans:regular,italic,500,500italic,700,700italic);
+input[type="text"]:focus{
+    outline: none;
+}
+a{
+    text-decoration: none;
+    color: #000;
+    font-family: 'Quicksand';
+}
+.loader{
+    margin: 35px 5px;
+}
+#confirm{
+    display: none;
+    margin-top: 20px;
+}
+#confirm span{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'DM Sans';
+    padding: 10px 0px;
+    box-sizing: border-box;
+}
+#confirm span button{
+    padding: 6px 4px;
+    cursor: pointer;
+    background-color: #F7941D;
+    border: 0px ;
+    font-size: 20px;
+    margin-top: 15px;
+    border-radius: 2px;
+    box-shadow: 0px 0px 20px red;
+}
+
+/* hero section  */
+.hero-main{
+    width: 100%;
+    background-color: #3485E9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    box-sizing: border-box;
+}
+.hero-main div img{
+    width: 100%;
+}
+.hero-main span{
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+.hero-main span div{
+    background-color: #4fcc4f;
+    font-family: 'Quicksand';
+    width: max-content;
+    padding: 5px 8px;
+    box-sizing: border-box;
+    margin-left: 50px;
+    border-radius: 3px;
+    border: 1px solid #5889d3;
+    cursor: pointer;
+    font-weight: 500;
+}
+.hero-main h1{
+    width: 100%;
+    color: #fff;
+    font-family: 'Quicksand';
+}
+.file-input{
+    color: transparent;
+}
+.file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+.file-input::before {
+    content: 'Select Prescription';
+    display: inline-block;
+    background: #F7941D;
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    color: #000;
+    cursor: pointer;
+    font-weight:600;
+    font-size: 20px;
+}
+.file-input:hover::before {
+    border-color: black;
+}
+.file-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+.hero-main span form{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.hero-main span form button{
+    background-color: transparent;
+    border: 0px;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    width: 85px;
+}
+.hero-main span form button img{
+    height: 70px;
+    width: 110px;
+    cursor: pointer;
+}
+
+/* main  */
+.main-main{
+    width: 80%;
+    box-sizing: border-box;
+    margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.main-main form{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-family: 'Quicksand';
+}
+.main-main form input{
+    width: 70%;
+    padding: 2px 5px;
+    font-size: 30px;
+    border: 0px;
+    border-left: 1px solid #3485E9;
+    border-top: 1px solid #3485E9;
+    border-bottom: 1px solid #3485E9;
+    font-family: 'Quicksand';
+}
+.main-main form button{
+    padding: 2px 7px;
+    font-size: 30px;
+    border: 0px;
+    border-right: 1px solid #3485E9;
+    border-top: 1px solid #3485E9;
+    border-bottom: 1px solid #3485E9;
+    background-color: rgb(48, 221, 48);
+    font-family: 'DM Sans';
+}
+.main-main span{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.table-header{
+    background-color: #F7941D;
+}
+.data{
+    width: 90%;
+    margin: 55px 0px;
+    font-size: 20px;
+    font-family: 'DM Sans';
+    padding: 0px;
+}
+.data-row{
+    display: flex;
+    gap: 50px;
+    justify-content:space-around;
+    align-items: center;
+    border-radius: 5px 5px 0px 0px;
+    border-bottom: 1px solid #000;
+}
+.data-row td{
+    padding: 15px 0px ;
+}
+.price{
+    background-color: aqua;
+    width: max-content;
+    padding: 5px 7px;
+    border-radius: 3px;
+    cursor: default;
+}
+
+
+
+
+.extract-form{
+    padding: 20px;
+    border: 1px solid #000;
+    margin : 30px 0px;
+}
+.extract-form button{
+    background-color: #F7941D;
+    padding: 5px 5px;
+    margin-top: 10px;
+    font-family: 'Poppins';
+    cursor: pointer;
+    border: 1px solid #ff8c00;
+}
+
+.extract-data-item input{
+    padding: 15px;
+    text-align: left;
+    background-color: #4fcc4f;
+    font-family: 'Poppins';
+    outline:none;
+}
+.extract-instruction{
+    font-weight: 700;
+    font-family: 'Poppins';
+    font-size: 20px;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    color: red;
+}
+.clear{
+    width: 15px;
+    cursor: pointer;
+}
