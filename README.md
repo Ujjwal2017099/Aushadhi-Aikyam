@@ -23,3 +23,9 @@
 ![image](https://user-images.githubusercontent.com/100745680/231277439-7bda60a7-b204-47a2-bcc7-87304a26dcb8.png)
 ![image](https://user-images.githubusercontent.com/100745680/231277569-63510ea1-6d96-48a3-a46c-7b9363bb1821.png)
 ![image](https://user-images.githubusercontent.com/100745680/231277681-ae30b792-da95-4fdc-88e2-094530f43f12.png)
+
+
+<h3>It also contains a telegram chat-bot that offers same services to the user you can use it by searching Aushadhi Aikyam on telegram</h3>
+
+
+<h2>Thank You for visiting</h2>
