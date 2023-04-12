@@ -5,6 +5,7 @@ import axios from 'axios'
 // import Main from './Main'
 import {Link} from 'react-router-dom'
 import { Audio } from 'react-loader-spinner'
+import { URl } from './AxiosUtil'
 
 const GetPrescription = ({text,loader,setLoder}) => {
   // console.log(text);
@@ -17,7 +18,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
         axios({
           method: 'GET',
           headers: {'content-type' : 'application/json'},
-          url: `http://localhost:8000/profile?token=${token}`
+          url: `${URl}/profile?token=${token}`
         })
         .then((res)=>{
           setHistory(res.data.History);
@@ -59,7 +60,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
             axios({
               method:'POST',
               headers : {'content-type' : 'application/json'},
-              url: 'http://localhost:8000/userhistory',
+              url: `${URl}/userhistory`,
               data  : JSON.stringify({token,history})
             }).then((res)=>{
 
@@ -67,7 +68,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
 
             })
           }
-          const url=`http://localhost:8000/?name=${e}`
+          const url=`${URl}/?name=${e}`
           
           try {
              axios({
@@ -163,9 +164,9 @@ const GetPrescription = ({text,loader,setLoder}) => {
          data.length===0 ? <></> :
           <table className='data'>
           <tr className='data-row table-header'>
-            <td>Supplier</td>
+            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
             <td>Name</td>
-            <td>Cost</td>
+            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
           </tr>
             {
               data.map((e)=>{

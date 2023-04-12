@@ -5,6 +5,7 @@ import mainIcon from '../assets/loginRightIcon.png'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import { motion } from "framer-motion"
+import { URl } from '../Components/AxiosUtil'
 
 const Login = () => {
     const [email , setEmail] = useState("");
@@ -13,7 +14,7 @@ const Login = () => {
     const token = JSON.parse(localStorage.getItem('id'));
     
     useEffect(()=>{
-        const url = `http://localhost:8000/profile`
+        const url = `${URl}/profile`
         
         const data = JSON.stringify({
             token
@@ -42,7 +43,7 @@ const Login = () => {
     const navigate = useNavigate();
     const registerUser = (e)=>{
         e.preventDefault();
-        const url = `http://localhost:8000/login?email=${email}&password=${password}`
+        const url = `${URl}/login?email=${email}&password=${password}`
         // console.log(email,password);
         // const data = JSON.stringify({
         //     email,password

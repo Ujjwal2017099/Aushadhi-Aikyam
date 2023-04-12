@@ -5,16 +5,19 @@ import health from '../assets/donate.png'
 import $ from "jquery";
 import axios from 'axios'
 import { Audio } from 'react-loader-spinner'
+import { URl } from './AxiosUtil';
+
 
 const Main = ({data,setData,loader,setLoder}) => {
   
   const [search , setSearch] = useState("");
-  
   const getData = ()=>{
+    // console.log(server);
     axios({
       method: "GET",
       headers: { 'content-type': 'application/json' },
-      url: `http://localhost:8000/?name=${search}`,
+      url: `${URl}/?name=${search}`,
+      
     }).then((res)=>{
       setData(res.data);
       setLoder(false);
@@ -30,7 +33,7 @@ const Main = ({data,setData,loader,setLoder}) => {
       axios({
         method: 'GET',
         headers: {'content-type' : 'application/json'},
-        url: `http://localhost:8000/profile?token=${token}`
+        url: `${URl}/profile?token=${token}`
       })
       .then((res)=>{
         setHistory(res.data.History);
@@ -38,7 +41,7 @@ const Main = ({data,setData,loader,setLoder}) => {
         axios({
           method:'POST',
           headers : {'content-type' : 'application/json'},
-          url: 'http://localhost:8000/userhistory',
+          url: `${URl}/userhistory`,
           data  : JSON.stringify({token,history})
         })
       })
@@ -87,9 +90,9 @@ const Main = ({data,setData,loader,setLoder}) => {
         {data.length===0 ? <></>:
         <table className='data'>
           <tr className='data-row table-header'>
-            <td>Supplier</td>
-            <td>Name</td>
-            <td>Cost</td>
+            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+            <td >Name</td>
+            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
           </tr>
             {
               data.map((e)=>{
