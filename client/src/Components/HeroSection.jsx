@@ -5,6 +5,8 @@ import search from '../assets/search.png'
 import './style.css'
 import axios from 'axios'
 import Avatar from './Avatar'
+import loginRightIcon from '../assets/loginRightIcon.png'
+import { URl } from './AxiosUtil'
 
 const HeroSection = ({setText,setLoder}) => {
     const [head,sethead] = useState("");
@@ -36,7 +38,7 @@ const HeroSection = ({setText,setLoder}) => {
 
   useEffect(()=>{
     if(token && token.length){
-        const url = `http://localhost:8000/profile?token=${token}`
+        const url = `${URl}/profile?token=${token}`
         
         const options = {
             method: "GET",
@@ -69,7 +71,7 @@ const HeroSection = ({setText,setLoder}) => {
         // console.log(form);
         axios({
             method : 'POST',
-            url : 'http://localhost:8000/getFile',
+            url : `${URl}/getFile`,
             headers: { 'content-type': "multipart/form-data" },
             data : form
         }).then((res)=>{
@@ -90,9 +92,17 @@ const HeroSection = ({setText,setLoder}) => {
             console.log(err);
         })
     }
+    const style={
+        width:'45px',
+        borderRadius:'50%'
+    }
   return (
     <div className='hero-main '>
         <span>
+            <div style={{ marginLeft:'0px', display:'flex',alignItems:'center', gap:'10px', backgroundColor:'transparent',border:'0px'}}>
+                <img style={style} src={loginRightIcon} alt="" />
+                <h3 style={{color:'#fff'}} >Aushadhi Aikyam</h3>
+            </div>
             <h1>{head+'|'}</h1>
             <form action="" onSubmit={uploadPrescription}>
                 <button  type="submit"><img  src={search} alt="" /></button>

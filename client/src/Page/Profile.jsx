@@ -4,6 +4,7 @@ import './style.css'
 // import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import { motion } from "framer-motion"
+import { URl } from '../Components/AxiosUtil'
 
 const Profile = () => {
   // let history = [
@@ -22,7 +23,7 @@ const Profile = () => {
     const data = JSON.stringify({
         token
     })
-    const url = `http://localhost:8000/profile?token=${token}`
+    const url = `${URl}/profile?token=${token}`
     const options = {
         method: "GET",
         headers: { 'content-type': 'application/json' },

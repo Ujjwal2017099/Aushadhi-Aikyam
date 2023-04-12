@@ -54,6 +54,7 @@ a{
     justify-content: space-between;
     padding: 15px 20px;
     box-sizing: border-box;
+    padding-bottom: 55px;
     clip-path: polygon(30% 0%, 70% 0%, 100% 0, 100% 91%, 63% 100%, 22% 91%, 0 99%, 0 0);
 }
 .hero-main div img{
@@ -174,6 +175,10 @@ a{
 }
 .table-header{
     background-color: #F7941D;
+    border-radius: 5px 5px 0px 0px;
+}
+.table-header td{
+    border-right: #F7941D;
 }
 .data{
     width: 90%;
@@ -183,15 +188,17 @@ a{
     padding: 0px;
 }
 .data-row{
-    display: flex;
+    /* display: flex; */
     gap: 50px;
-    justify-content:space-around;
+    /* justify-content:space-around; */
     align-items: center;
     border-radius: 5px 5px 0px 0px;
     border-bottom: 1px solid #000;
+
 }
 .data-row td{
-    padding: 15px 0px ;
+    text-align: left;
+    padding: 15px 10px ;
 }
 .price{
     background-color: aqua;
@@ -224,6 +231,7 @@ a{
 }
 .extract-form button:hover{
     box-shadow: 0px 0px 8px 0px #000;
+    transition: 100ms ease-out;
 }
 .extract-data-item{
     background-color: #b4d2f7;

@@ -5,6 +5,7 @@ import mainIcon from '../assets/loginRightIcon.png'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import { motion } from "framer-motion"
+import { URl } from '../Components/AxiosUtil'
 
 const Signup = () => {
     const [email , setEmail] = useState("");
@@ -14,7 +15,7 @@ const Signup = () => {
     const navigate = useNavigate();
     const registerUser = (e)=>{
         e.preventDefault();
-        const url = `http://localhost:8000/register`
+        const url = `${URl}/register`
         console.log(email,password);
         const data = JSON.stringify({
             name,email,password

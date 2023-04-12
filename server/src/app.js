@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 8000;
+const port = 4000;
 const {PythonShell} = require("python-shell");
 require("./connection/connection");
 const Link = require("./models/link");
@@ -11,7 +11,7 @@ require("dotenv").config();
 const fileUpload = require('express-fileupload') 
 
 const corsOptions = {
-    origin: "http://localhost:3000",
+    origin: "*",
     optionsSuccessStatus: 200,
 };
 app.use(express.json());
