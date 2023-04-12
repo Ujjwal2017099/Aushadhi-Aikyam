@@ -4,6 +4,7 @@ import loginIcon from '../assets/loginLeft.svg'
 import mainIcon from '../assets/loginRightIcon.png'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
+import { motion } from "framer-motion"
 
 const Signup = () => {
     const [email , setEmail] = useState("");
@@ -34,6 +35,10 @@ const Signup = () => {
         })
     }
   return (
+    <motion.div 
+    initial={{opacity:0}}
+      animate={{opacity:1}}
+      exit={{opacity:0}}>
     <div className='login-main'>
         <div className="login-main-left">
             <img src={loginIcon} alt="" />
@@ -57,6 +62,7 @@ const Signup = () => {
             </div>
         </div>
     </div>
+    </motion.div>
   )
 }
 
