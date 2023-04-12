@@ -1,9 +1,9 @@
 # SolveForIndiaHack
 
 <h2>Getting Started:</h2>
-1.Make sure you have node.js installed on your system. 
+1.Make sure you have node.js and python installed on your system. 
   
->If not then you can install it from [here](https://nodejs.org/en/)
+>If not then you can install it from here [node](https://nodejs.org/en/) [python](https://www.python.org/downloads/)
 
 2.Clone the project repo on you system by either downloading the code or by using git clone
 
