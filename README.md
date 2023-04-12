@@ -1,4 +1,4 @@
-# SolveForIndiaHack
+# Aushadhi Aikyam
 
 <h2>Getting Started:</h2>
 1.Make sure you have node.js and python installed on your system. 
