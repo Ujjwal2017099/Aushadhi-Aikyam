@@ -5,6 +5,8 @@
   
 >If not then you can install it from here [node](https://nodejs.org/en/) [python](https://www.python.org/downloads/)
 
+>Perform ```pip install selenium``` , ```pip install bs4``` 
+
 2.Clone the project repo on you system by either downloading the code or by using git clone
 
 3.Run ```npm install``` in the terminal for both client and server directories it will install all the necessary dependencies in your system.
