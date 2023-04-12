@@ -201,13 +201,18 @@ a{
     cursor: pointer;
     border: 1px solid #ff8c00;
 }
-
+.extract-data-item{
+    background-color: #b4d2f7;
+    border-radius: 7px;
+}
 .extract-data-item input{
     padding: 15px;
     text-align: left;
-    background-color: #4fcc4f;
+    background-color: #609ce7;
     font-family: 'Poppins';
     outline:none;
+    border-radius: 7px;
+    border: 0px;
 }
 .extract-instruction{
     font-weight: 700;
