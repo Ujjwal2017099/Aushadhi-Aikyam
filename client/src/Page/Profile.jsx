@@ -3,13 +3,14 @@ import profile from '../assets/profileIcon.svg'
 import './style.css'
 // import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
+import { motion } from "framer-motion"
 
 const Profile = () => {
-  let history = [
-    "dolo",
-    "calpol",
-    "syrup"
-  ]
+  // let history = [
+  //   "dolo",
+  //   "calpol",
+  //   "syrup"
+  // ]
   // const [queryParameters] = useSearchParams();
   const token = JSON.parse(localStorage.getItem('id'))
   const [Email,setEmail] = useState("");
@@ -41,14 +42,20 @@ const Profile = () => {
   },[])
   
   return (
-    // <div className='profile-main-parent'>
+    <motion.div 
+    initial={{opacity:0}}
+      animate={{opacity:1}}
+      exit={{opacity:0}}>
     <div className='profile-main'>
       <div className="profile-header-section">
         <div>
         </div>
           <img src={profile} alt="" />
       </div>
-      <p>{Name}</p>
+      <div style={{display:'flex',width:"100%"}}>
+        <p>Name : {Name}</p>
+        <p>Email : {Email}</p>
+      </div>
 
       <span></span>
       <div className="history">
@@ -68,7 +75,7 @@ const Profile = () => {
         }
       </div>
     </div>
-    // </div>
+    </motion.div>
   )
 }
 
