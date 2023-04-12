@@ -152,4 +152,5 @@ link_container = sys.argv[7]
 b = int(bit)
 lb = int(link_bit)
 # print(url, med_container_class, med_name_class, b, med_price_class, lb, link_container)
+
 print(get_med_data(url, med_container_class, med_name_class, b, med_price_class, lb, link_container))
