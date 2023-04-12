@@ -10,12 +10,12 @@ const HeroSection = ({setText,setLoder}) => {
     const [head,sethead] = useState("");
     const [coordinate,setCoordinate] = useState([0,0]);
     
-    const headContent = [
-        "Welcome to Aushadhi Aikyam...",
-        "Compare your prescription cost from different websites..."
-    ]
     
     setTimeout(()=>{
+        const headContent = [
+            "Welcome to Aushadhi Aikyam...",
+            "Compare your prescription cost from different websites..."
+        ]
         let i=coordinate[0],j=coordinate[1];
         let length = headContent[i].length;
         
@@ -35,7 +35,7 @@ const HeroSection = ({setText,setLoder}) => {
   const [Name,setName] = useState("");
 
   useEffect(()=>{
-    if(token.length){
+    if(token && token.length){
         const url = `http://localhost:8000/profile?token=${token}`
         
         const options = {
