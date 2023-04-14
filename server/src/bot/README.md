@@ -10,7 +10,7 @@
 * 24/7 Availability
 
 ### Pre-requisites:
-> Python version : 3.9.11
+> Install [Python version : 3.9.11](https://www.python.org/downloads/release/python-3911/)
 > 
 >Install [pyTelegramBotAPI](https://pypi.org/project/pyTelegramBotAPI/), [bs4](https://pypi.org/project/beautifulsoup4/) and [selenium](https://pypi.org/project/selenium/) via pip
 >
