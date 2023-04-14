@@ -12,7 +12,7 @@
 ### Pre-requisites:
 > Python version : 3.9.11
 > 
->Install [pyTelegramBotAPI](https://pypi.org/project/pyTelegramBotAPI/), [bs4](pip install beautifulsoup4) and [selenium](pip install selenium) via pip
+>Install [pyTelegramBotAPI](https://pypi.org/project/pyTelegramBotAPI/), [bs4](https://pypi.org/project/beautifulsoup4/) and [selenium](https://pypi.org/project/selenium/) via pip
 >
 >Set up [google cloud CLI](https://cloud.google.com/sdk/docs/initializing)
 >
