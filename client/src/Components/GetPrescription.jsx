@@ -6,6 +6,7 @@ import axios from 'axios'
 import {Link} from 'react-router-dom'
 import { Audio } from 'react-loader-spinner'
 import { URl } from './AxiosUtil'
+import Loader from './Loader'
 
 const GetPrescription = ({text,loader,setLoder}) => {
   // console.log(text);
@@ -148,7 +149,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
         </form>
          {loader ?
             <div className='loader'>
-                <Audio
+                {/* <Audio
                     height="80"
                     width="80"
                     radius="9"
@@ -157,7 +158,8 @@ const GetPrescription = ({text,loader,setLoder}) => {
                     wrapperStyle
                     wrapperClass
                     
-                />
+                /> */}
+                <Loader/>
             </div>
          
          : 

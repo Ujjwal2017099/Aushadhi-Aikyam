@@ -6,7 +6,7 @@ import $ from "jquery";
 import axios from 'axios'
 import { Audio } from 'react-loader-spinner'
 import { URl } from './AxiosUtil';
-
+import Loader from './Loader';
 
 const Main = ({data,setData,loader,setLoder}) => {
   
@@ -72,19 +72,10 @@ const Main = ({data,setData,loader,setLoder}) => {
           <button className="yes">Thank You</button>
         </span>
       </div>
-      <span>
+      <span style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
         {
           loader&&<div className='loader'>
-            <Audio
-                    height="80"
-                    width="80"
-                    radius="9"
-                    color="#3485E9"
-                    ariaLabel="loading"
-                    wrapperStyle
-                    wrapperClass
-                    
-                  />
+                  <Loader/>
           </div>
         }
         {data.length===0 ? <></>:

@@ -13,7 +13,19 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    History : [String]
+    Type: {
+        type: Number,
+        default : 0
+    },
+    Address : {
+        type:String
+    },
+    SellerId : {
+        type:String
+    },
+    History : [String],
+    Cart : [String],
+    Orders : [String]
 });
 
 const User = new mongoose.model("User", userSchema);

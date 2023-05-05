@@ -3,7 +3,7 @@ import './style.css'
 import loginIcon from '../assets/loginLeft.svg'
 import mainIcon from '../assets/loginRightIcon.png'
 import axios from 'axios'
-import {useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { motion } from "framer-motion"
 import { URl } from '../Components/AxiosUtil'
 
@@ -90,14 +90,16 @@ const Login = () => {
                 <form action="" onSubmit={registerUser}>
                     <h1 style={{marginTop:'40px'}}>Login!</h1>
                     {err&&<div style={
-                        {backgroundColor:'#fb0000eb',
-                            padding:'7px 5px',
+                        {backgroundColor:'#f1aeb5',
+                            padding:'7px 10px',
                             borderRadius:'5px',
-                            color:'#fff'
-                        }}>!!! Email/Password or both are incorrect</div>}
+                            color:'#58151c',
+                            border : '1px solid #58151c'
+                        }}>Email/Password or both are incorrect</div>}
                     <input type="email" name="Email" placeholder='Email'  value={email} onChange={(e)=>{ setEmail(e.target.value)}} required/>
                     <input type="password" name="Password" placeholder='Password' value={password} onChange={(e)=>{setPassword(e.target.value)}} required/>
                     <button type="submit">Submit</button>
+                    <p>Don't have an account <Link to='/signup' >click here</Link> to Signup</p>
                 </form>
             </div>
         </div>

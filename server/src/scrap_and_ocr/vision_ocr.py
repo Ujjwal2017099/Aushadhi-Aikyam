@@ -14,8 +14,12 @@ def detect_text(path):
     # print(response)
     texts = response.text_annotations
     # print('Texts:')
-
+    
+    flag=1
     for text in texts:
+        if flag:
+            flag=0
+            continue
         if (len(text.description) >= 5):
             print('\n"{}"'.format(text.description))
 

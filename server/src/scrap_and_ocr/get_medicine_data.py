@@ -15,9 +15,7 @@ for class : 0
 for id : 1
 '''
 
-from pprint import pprint
 import re, json
-from collections import defaultdict
 import sys
 
 import bs4
@@ -29,8 +27,11 @@ from selenium.webdriver.chrome.service import Service
 
 
 def get_med_data(url=None, med_container_class=None, med_name_class=None, price_bit=None, med_price_container=None, link_bit=None, link_container=None):
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
     s = Service('./chromedriver.exe')
-    driver = webdriver.Chrome(service=s)
+    driver = webdriver.Chrome(service=s, options=options)
 
     bad_response = json.dumps([dict({"B_R": 404})])
 
@@ -118,9 +119,11 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, price_
 # url = 'https://www.netmeds.com/catalogsearch/result/calpol/all'
 # med_container_class = 'cat-item'
 # med_name_class = 'clsgetname'
-# med_price_id = 'final_price'
+# med_price_container = 'final_price'
+# link_bit = 0
+# link_container = 'category_name'
 #
-# # 1mg
+# 1mg
 # bit = 0
 # url = 'https://www.1mg.com/search/all?name=calpol'
 # med_container_class = 'style__horizontal-card___1Zwmt style__height-158___1XIvD'
@@ -154,4 +157,3 @@ lb = int(link_bit)
 # print(url, med_container_class, med_name_class, b, med_price_class, lb, link_container)
 
 print(get_med_data(url, med_container_class, med_name_class, b, med_price_class, lb, link_container))
-

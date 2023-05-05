@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Quicksand:300,regular,500,600,700);
 @import url(https://fonts.googleapis.com/css?family=DM+Sans:regular,italic,500,500italic,700,700italic);
-input[type="text"]:focus{
+input:focus{
     outline: none;
 }
 a{
@@ -10,6 +10,9 @@ a{
 }
 .loader{
     margin: 35px 5px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 /* ---------------------------------------------------------------------- */
 
@@ -46,9 +49,53 @@ a{
     border-radius: 3px;
     cursor: pointer;
 }
+
+.logout-btn {
+    appearance: none;
+    background-color: transparent;
+    border: 0.125em solid #1A1A1A;
+    border-radius: 0.9375em;
+    box-sizing: border-box;
+    color: #3B3B3B;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    outline: none;
+    padding: 7px 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+}
+
+.logout-btn:disabled {
+    pointer-events: none;
+}
+
+.logout-btn:hover {
+    color: #fff;
+    background-color: #1A1A1A;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+}
+
+.logout-btn:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
 .hero-main{
     width: 100%;
-    background-color: #3485E9;
+    /* background-color: #3485E9; */
+    background: linear-gradient(115deg, #FF9797 0%, #0F0068 100%), linear-gradient(245deg, #A8FFE5 0%, #0500FF 100%), radial-gradient(100% 225% at 100% 0%, #FF003D 0%, #000000 100%), radial-gradient(90% 160% at 0% 100%, #E42C64 0%, #E42C64 30%, #614AD3 calc(30% + 1px), #614AD3 60%, #2D248A calc(60% + 1px), #2D248A 70%, #121B74 calc(70% + 1px), #121B74 100%), linear-gradient(100deg, #48466F 9%, #48466D 35%, #3D84A8 calc(35% + 1px), #3D84A8 65%, #46CDCF calc(65% + 1px), #46CDCF 70%, #ABEDD8 calc(70% + 1px), #ABEDD8 100%);
+        background-blend-mode: overlay, overlay, overlay, overlay, normal;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -74,7 +121,7 @@ a{
     box-sizing: border-box;
     margin-left: 50px;
     border-radius: 3px;
-    border: 1px solid #5889d3;
+    border: 1px solid #000;
     cursor: pointer;
     font-weight: 500;
 }
@@ -97,7 +144,7 @@ a{
     content: 'Select Prescription';
     display: inline-block;
     background: #F7941D;
-    border: 1px solid #999;
+    border: 1px solid #F7941D;
     border-radius: 3px;
     padding: 5px 8px;
     outline: none;
@@ -216,6 +263,13 @@ a{
     border: 1px solid #000;
     margin : 30px 0px;
     border-radius: 5px;
+    
+    background: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(2.5px);
+        -webkit-backdrop-filter: blur(2.5px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
 }
 .extract-form:hover{
     border: 0px;
@@ -247,9 +301,16 @@ a{
     border: 0px;
 }
 .extract-data-item:hover{
-    box-shadow: 0px 0px 8px 0px #000;
+    /* box-shadow: 0px 0px 8px 0px #000;
     transition: 100ms ease-out;;
-    margin: 0px 2px;
+    margin: 0px 2px; */
+
+    background: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(2.5px);
+        -webkit-backdrop-filter: blur(2.5px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
 }
 .extract-instruction{
     font-weight: 700;
@@ -268,3 +329,215 @@ a{
     box-shadow: 0px 0px 8px 0px #000;
     transition: 100ms ease-out;
 }
+
+.footer-main{
+    width: 100%;
+    height: 300px;
+    background-color: #000;
+    margin-top: 40px;
+}
+
+.social-parent{
+    margin: 45px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.social-parent p{
+    color: #fff;
+    font-family: 'Poppins';
+    font-size: 12px;
+    width: 100%;
+}
+
+.main-social {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.main-social h3{
+    color: #fff;
+    font-family: 'Poppins';
+}
+
+.up {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+}
+
+.down {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+}
+
+.card1 {
+    width: 90px;
+    height: 90px;
+    outline: none;
+    border: none;
+    background: white;
+    border-radius: 90px 5px 5px 5px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    transition: .2s ease-in-out;
+}
+
+.instagram {
+    margin-top: 1.5em;
+    margin-left: 1.2em;
+    fill: #cc39a4;
+}
+
+.card2 {
+    width: 90px;
+    height: 90px;
+    outline: none;
+    border: none;
+    background: white;
+    border-radius: 5px 90px 5px 5px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    transition: .2s ease-in-out;
+}
+
+.twitter {
+    margin-top: 1.5em;
+    margin-left: -.9em;
+    fill: #03A9F4;
+}
+
+.card3 {
+    width: 90px;
+    height: 90px;
+    outline: none;
+    border: none;
+    background: white;
+    border-radius: 5px 5px 5px 90px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    transition: .2s ease-in-out;
+}
+
+.github {
+    margin-top: -.6em;
+    margin-left: 1.2em;
+}
+
+.card4 {
+    width: 90px;
+    height: 90px;
+    outline: none;
+    border: none;
+    background: white;
+    border-radius: 5px 5px 90px 5px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    transition: .2s ease-in-out;
+}
+
+.discord {
+    margin-top: -.9em;
+    margin-left: -1.2em;
+    fill: #8c9eff;
+}
+
+.card1:hover {
+    cursor: pointer;
+    scale: 1.1;
+    background-color: #cc39a4;
+}
+
+.card1:hover .instagram {
+    fill: white;
+}
+
+.card2:hover {
+    cursor: pointer;
+    scale: 1.1;
+    background-color: #03A9F4;
+}
+
+.card2:hover .twitter {
+    fill: white;
+}
+
+.card3:hover {
+    cursor: pointer;
+    scale: 1.1;
+    background-color: black;
+}
+
+.card3:hover .github {
+    fill: white;
+}
+
+.card4:hover {
+    cursor: pointer;
+    scale: 1.1;
+    background-color: #8c9eff;
+}
+
+.card4:hover .discord {
+    fill: white;
+}
+
+
+
+
+.prd-card {
+    max-width: 320px;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border: 1px solid rgba(243, 244, 246, );
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: #f0e9e9a9;
+}
+
+.prd-card .header {
+    display: flex;
+    justify-content: space-between;
+    grid-gap: 1rem;
+    gap: 1rem;
+}
+
+.prd-card .header div .title {
+    font-size: 1.125rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    color: rgba(17, 24, 39, 1);
+    text-decoration: none;
+}
+
+.prd-card .header div .title:hover {
+    text-decoration: underline royalblue;
+}
+
+.prd-card .header div .name {
+    margin-top: 0.25rem;
+    font-size: 1.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+    color: rgba(75, 85, 99, 1);
+    margin-top: 10px;
+}
+
+.prd-card .header .image {
+    display: block;
+    flex-shrink: 0;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    background-color: royalblue;
+}
+
+.prd-card .description {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: rgba(107, 114, 128, 1);
+}
+

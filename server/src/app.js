@@ -8,7 +8,10 @@ const cors = require("cors");
 const User = require('./models/user')
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
-const fileUpload = require('express-fileupload') 
+const fileUpload = require('express-fileupload')
+const fs = require('fs')
+const Seller = require('./models/seller')
+const Product = require('./models/products')
 
 const corsOptions = {
     origin: "*",
@@ -104,12 +107,13 @@ app.get('/profile',async (req,res)=>{
     try{
         const token = req.query.token;
         // const ret="";
+        // console.log(token);
         jwt.verify(token,process.env.ACCESS_KEY,async (err,user)=>{
             if(err) console.log(err);
             else{
             const r = await User.find({Email:user.Email,Password:user.Password});
             // console.log(r);
-                if(r.length)res.json({Email : r[0].Email,Name : r[0].Name,History : r[0].History});
+                if(r.length)res.json(r[0]);
             }
         })
     }catch(err){
@@ -168,6 +172,11 @@ app.post('/getFile', async (req,res)=>{
                 }
             );
             // console.log(x);
+            fs.unlink(path,(err)=>{
+                if (err) return console.log(err);
+                // console.log("file deleted successfully");
+            })
+
             res.status(200).send(x);
         }else{
             return res.sendStatus(400);
@@ -177,6 +186,161 @@ app.post('/getFile', async (req,res)=>{
     }
 
 })
+
+app.post("/upgradeToSeller", (req, res) => {
+    try {
+        const token = req.query.token;
+        // console.log(token);
+        jwt.verify(token, process.env.ACCESS_KEY, async (err, user) => {
+            if (err) {console.log(err.message); return res.sendStatus(401);}
+            else {
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
+                });
+                if (r.length)
+                {
+                    const seller = new Seller({
+                        Name : req.body.name,
+                        Mobile : req.body.number,
+                        GST : req.body.gst,
+                        PIN : req.body.pin,
+                        Address : req.body.address
+                    })
+                    r[0].Type = 1;
+                    r[0].SellerId = seller._id;
+                    r[0].Address = seller.Address;
+                    seller.save()
+                    .then(()=>{
+                        r[0].save();
+                        return res.sendStatus(201);
+                    })
+                    .catch(()=>{
+                        return res.sendStatus(501);
+                    })
+
+                }
+            }
+        });
+    } catch (error) {
+        console.log(error.message);
+        return res.sendStatus(501)
+    }
+});
+
+app.get('/getProducts',(req,res)=>{
+    try {
+        const token = req.query.token;
+        jwt.verify(token , process.env.ACCESS_KEY ,async (err,user)=>{
+            if (err) {
+                return res.sendStatus(401);
+            } else {
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
+                });
+                if (r.length && r[0].Type === 1) {
+                    const sId = r[0].SellerId;
+                    const seller = await Seller.find({
+                        _id : sId
+                    })
+                    if(seller.length){
+                        let products = [];
+                        let cnt = s[0].Products.length;
+                        s[0].Products.forEach(async (e)=>{
+                            const prd = await Product.find({
+                                _id : e
+                            })
+                            cnt--;
+                            if(prd.length){
+                                products.push({
+                                    title : prd.Name,
+                                    description : prd.Description,
+                                    price : prd.Price,
+                                    pin : prd.Pin
+                                })
+                            }
+                        })
+                        if(cnt===0) {
+                            res.status(200).send({
+                                sId,products
+                            })
+                        }
+                    }else{
+                        return res.sendStatus(501)
+                    }
+                }
+                else{
+                    return res.sendStatus(401);
+                }
+            }
+        })
+    } catch (error) {
+        return res.sendStatus(401);
+    }
+})
+
+app.post('/addProducts',(req,res)=>{
+    try {
+        const token = req.query.token;
+        jwt.verify(token, process.env.ACCESS_KEY, async (err, user) => {
+            if (err) {
+                return res.sendStatus(401);
+            } else {
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
+                });
+                if (r.length && r[0].Type === 1) {
+                    const sId = r[0].SellerId;
+                    const seller = await Seller.find({
+                        _id: sId,
+                    });
+                    if (seller.length) {
+                        const prd = new Product({
+                            Name : req.body.title,
+                            Description : req.body.description,
+                            Price : req.body.price,
+                            SellerId : sId,
+                            Pin : req.body.pin
+                        })
+
+                        // console.log(prd);
+                        prd.save()
+                        .then(()=>{
+                            seller[0].Products.push(prd._id);
+                            seller[0].save()
+                            return res.sendStatus(201);
+                        }).catch((err)=>{
+                            console.log(err.message);
+                            return res.sendStatus(501);
+                        })
+                    } else {
+                        return res.sendStatus(501);
+                    }
+                } else {
+                    return res.sendStatus(401);
+                }
+            }
+        });
+    } catch (error) {
+        return res.sendStatus(401);
+    }
+})
+
+app.get('/findProducts',async (req,res)=>{
+    try {
+        const prd = await Product.find({
+            Name : req.query.title,
+            Pin : req.query.pin
+        })
+
+        res.status(200).send(prd);
+    } catch (error) {
+        return req.sendStatus(401);
+    }
+})
+
 app.listen(port,()=>{
     console.log("server started");
 })
