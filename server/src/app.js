@@ -12,6 +12,7 @@ const fileUpload = require('express-fileupload')
 const fs = require('fs')
 const Seller = require('./models/seller')
 const Product = require('./models/products')
+const Order = require('./models/orders')
 
 const corsOptions = {
     origin: "*",
@@ -338,6 +339,79 @@ app.get('/findProducts',async (req,res)=>{
         res.status(200).send(prd);
     } catch (error) {
         return req.sendStatus(401);
+    }
+})
+
+app.post('/placeOrder',(req,res)=>{
+    try {
+        const token = req.query.token;
+        jwt.verify(token,process.env.ACCESS_KEY,async (err,user)=>{
+            if(err) {res.sendStatus(401);}
+            const r = await User.find({
+                Email: user.Email,
+                Password: user.Password,
+            });
+
+            if(r.length){
+                const ord = new Order({
+                    User : r[0]._id,
+                    ProductId : req.body.prdId,
+                    SellerId : req.body.sellerId,
+                    Quantity : req.body.quantity
+                })
+
+                ord.save()
+                .then(()=>{
+                    r[0].Orders.push(ord._id);
+                    r[0].save()
+                })
+                .catch((err)=>{
+                    res.sendStatus(500);
+                })
+            }
+        })
+    } catch (error) {
+        res.sendStatus(401);
+    }
+})
+
+app.post('/delivered',(req,res)=>{
+    try {
+        const token = req.query.token;
+        jwt.verify(token,process.env.ACCESS_KEY,async (err,user)=>{
+            if(err) return res.sendStatus(401);
+            const r = await User.find({
+                Email: user.Email,
+                Password: user.Password,
+            });
+            if (r.length && r[0].Type === 1) {
+                const sId = r[0].SellerId;
+                const seller = await Seller.find({
+                    _id: sId,
+                });
+                if (seller.length) {
+                    const ord = await Order.find({
+                        _id : req.body.ordId
+                    })
+
+                    if(ord.length){
+                        ord[0].Status = true;
+                        ord[0].save()
+                        .then(()=>{
+                            return res.sendStatus(200);
+                        }).catch((err)=>{
+                            return res.sendStatus(500);
+                        })
+                    }
+                } else {
+                    return res.sendStatus(501);
+                }
+            } else {
+                return res.sendStatus(401);
+            }
+        })
+    } catch (error) {
+        res.sendStatus(401);
     }
 })
 

@@ -5,8 +5,21 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    Products: {
-        type: [String],
+    ProductId: {
+        type: String,
+        required : true
+    },
+    SellerId : {
+        type:String,
+        required : true
+    },
+    Quantiy : {
+        type : Number,
+        default : 1
+    },
+    Status : {
+        type:Boolean,
+        default : false
     }
 });
 
