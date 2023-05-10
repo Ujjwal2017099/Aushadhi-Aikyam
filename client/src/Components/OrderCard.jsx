@@ -38,7 +38,6 @@ const OrderCard = ({order,seller,isUpdate,setIsUpdate}) => {
                 setProductName(res.data.Name);
                 setProductDescription(res.data.Description);
                 setProductPin(res.data.Pin);
-                setIsUpdate(!isUpdate);
             }).catch((err)=>{
 
             })
@@ -62,12 +61,34 @@ const OrderCard = ({order,seller,isUpdate,setIsUpdate}) => {
         .then((res)=>{
             // console.log(res);
             toast("Your order is successfully completed")
+            setTimeout(()=>{
+                setIsUpdate(!isUpdate);
+            },3000)
         }).catch((err)=>{
             console.log(err.message);
         })
     }
     const regect = ()=>{
-       
+       const url = `${URl}/dropOrder`
+        const data = JSON.stringify({
+            order ,seller
+        })
+        const options = {
+            method : 'POST',
+            headers : {'content-type' : 'application/json'},
+            url,
+            data
+        }
+        axios(options)
+        .then((res)=>{
+            // console.log(res);
+            toast("Order is rejected")
+            setTimeout(()=>{
+                setIsUpdate(!isUpdate);
+            },3000)
+        }).catch((err)=>{
+            console.log(err.message);
+        })
     }
   return (
     <div className="notifications-container">

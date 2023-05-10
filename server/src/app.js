@@ -529,7 +529,7 @@ app.post('/delivered' , async (req,res)=>{
         const seller = await Seller.find({_id : sellerId})
         // console.log(order);
         if(order.length && seller.length &&  order[0].SellerId === sellerId){
-            order[0].status = 1;
+            order[0].Status = 1;
             order[0].save()
             .then(()=>{
                 let newOrder = [];
@@ -558,6 +558,102 @@ app.post('/delivered' , async (req,res)=>{
         }
     } catch (error) {
         return res.sendStatus(501);
+    }
+})
+
+app.post('/dropOrder' , async (req,res)=>{
+    try {
+        // console.log(req.body);
+        const orderId = req.body.order;
+        const sellerId = req.body.seller;
+        
+        const order = await Order.find({_id : orderId});
+        const seller = await Seller.find({_id : sellerId})
+        // console.log(order);
+        if(order.length && seller.length &&  order[0].SellerId === sellerId){
+            order[0].Status = 2;
+            order[0].save()
+            .then(()=>{
+                let newOrder = [];
+                let f = false;
+                seller[0].Orders.forEach((e) => {
+                    if (f || e !== orderId) {
+                        newOrder.push(e);
+                    } else if (e === orderId) {
+                        f = true;
+                    }
+                });
+                seller[0].Orders = newOrder;
+                seller[0].save().then(() => {
+                    return res.sendStatus(200);
+                })
+                .catch((err)=>{
+
+                    return res.sendStatus(501);
+                })
+            })
+            .catch((err)=>{
+                return res.sendStatus(404)
+            })
+        }else{
+            return  res.sendStatus(401)
+        }
+    } catch (error) {
+        return res.sendStatus(501);
+    }
+})
+
+app.get('/order' , (req,res)=>{
+    try {
+        const token = req.query.token;
+        jwt.verify(token,process.env.ACCESS_KEY,async (err,user)=>{
+            if (err) {return res.sendStatus(401);}
+            else {
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
+                });
+                if(r.length){
+                    // console.log(r[0]);
+                    res.status(200).send(r[0].Orders);
+                }
+            }
+        })
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+})
+
+app.get("/myIndividualOrder" ,  (req,res)=>{
+    try {
+        const token = req.query.token;
+        // console.log(token);
+        const orderId = req.query.order;
+        jwt.verify(token, process.env.ACCESS_KEY, async (err, user) => {
+            if (err) {
+                return res.sendStatus(401);
+            } else {
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
+                });
+                
+                const order = await Order.find({_id:orderId});
+                // console.log(order[0].User);
+                // console.log(r[0]._id.toString());
+                if(order.length && r.length && order[0].User === r[0]._id.toString()){
+                    return res.status(200).send({
+                        Address: order[0].Address,
+                        ProductId: order[0].ProductId,
+                        Status : order[0].Status
+                    });
+                }else{
+                    return res.sendStatus(404);
+                }
+            }
+        });
+    } catch (error) {
+        
     }
 })
 
