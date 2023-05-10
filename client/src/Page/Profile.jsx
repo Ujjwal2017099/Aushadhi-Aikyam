@@ -90,7 +90,7 @@ const Profile = () => {
       <div style={{display:'flex',width:"100%"}}>
         <p>Name : {Name}</p>
         <p>Email : {Email}</p>
-        {address.length && <p>Address : {address}</p>}
+        {address && address.length && <p>Address : {address}</p>}
       </div>
 
       <span></span>

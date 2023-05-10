@@ -232,6 +232,7 @@ app.post("/upgradeToSeller", (req, res) => {
 app.get('/getProducts',(req,res)=>{
     try {
         const token = req.query.token;
+        
         jwt.verify(token , process.env.ACCESS_KEY ,async (err,user)=>{
             if (err) {
                 return res.sendStatus(401);
@@ -242,31 +243,16 @@ app.get('/getProducts',(req,res)=>{
                 });
                 if (r.length && r[0].Type === 1) {
                     const sId = r[0].SellerId;
-                    const seller = await Seller.find({
+                    const s = await Seller.find({
                         _id : sId
                     })
-                    if(seller.length){
-                        let products = [];
-                        let cnt = s[0].Products.length;
-                        s[0].Products.forEach(async (e)=>{
-                            const prd = await Product.find({
-                                _id : e
-                            })
-                            cnt--;
-                            if(prd.length){
-                                products.push({
-                                    title : prd.Name,
-                                    description : prd.Description,
-                                    price : prd.Price,
-                                    pin : prd.Pin
-                                })
-                            }
-                        })
-                        if(cnt===0) {
+                    if(s.length){
+                        let products = s[0].Products;
+                        
                             res.status(200).send({
-                                sId,products
+                                products
                             })
-                        }
+                        
                     }else{
                         return res.sendStatus(501)
                     }
@@ -353,21 +339,30 @@ app.post('/placeOrder',(req,res)=>{
             });
 
             if(r.length){
-                const ord = new Order({
-                    User : r[0]._id,
-                    ProductId : req.body.prdId,
-                    SellerId : req.body.sellerId,
-                    Quantity : req.body.quantity
-                })
+                const _id = req.body.productId;
+                const prd = await Product.find({ _id });
+                if (prd.length) {
+                    const seller = await Seller.find({
+                        _id : prd[0].SellerId
+                    })
+                    if(seller.length === 0) {return res.sendStatus(404);}
+                    const ord = new Order({
+                        User: r[0]._id,
+                        ProductId: _id,
+                        SellerId: prd[0].SellerId,
+                        Address : req.body.address
+                    });
 
-                ord.save()
-                .then(()=>{
                     r[0].Orders.push(ord._id);
-                    r[0].save()
-                })
-                .catch((err)=>{
-                    res.sendStatus(500);
-                })
+                    seller[0].Orders.push(ord._id);
+                    await ord.save();
+                    await r[0].save();
+                    await seller[0].save();
+                    res.sendStatus(201);
+                } else {
+                    return res.sendStatus(404);
+                }
+                
             }
         })
     } catch (error) {
@@ -375,43 +370,194 @@ app.post('/placeOrder',(req,res)=>{
     }
 })
 
-app.post('/delivered',(req,res)=>{
+app.get('/individualProduct',async (req,res)=>{
+    try {
+        const _id = req.query.productId;
+        const prd = await Product.find({_id});
+        if(prd.length){
+            return res.status(200).send(prd[0]);
+        }
+        else{
+            return res.sendStatus(404);
+        }
+    } catch (error) {
+        return res.send(404);
+    }
+})
+
+app.get('/cartItems',(req,res)=>{
     try {
         const token = req.query.token;
         jwt.verify(token,process.env.ACCESS_KEY,async (err,user)=>{
-            if(err) return res.sendStatus(401);
-            const r = await User.find({
-                Email: user.Email,
-                Password: user.Password,
-            });
-            if (r.length && r[0].Type === 1) {
-                const sId = r[0].SellerId;
-                const seller = await Seller.find({
-                    _id: sId,
+            if(err) {return res.sendStatus(500);}
+            else{
+                // console.log("ok");
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
                 });
-                if (seller.length) {
-                    const ord = await Order.find({
-                        _id : req.body.ordId
-                    })
-
-                    if(ord.length){
-                        ord[0].Status = true;
-                        ord[0].save()
-                        .then(()=>{
-                            return res.sendStatus(200);
-                        }).catch((err)=>{
-                            return res.sendStatus(500);
-                        })
-                    }
-                } else {
-                    return res.sendStatus(501);
+                if(r.length){
+                    return res.status(200).send(r[0].Cart);
+                }else{
+                    return res.sendStatus(404);
                 }
-            } else {
-                return res.sendStatus(401);
             }
         })
     } catch (error) {
-        res.sendStatus(401);
+        return res.sendStatus(404)
+    }
+})
+
+app.post('/addToCart',(req,res)=>{
+    try {
+        const token = req.query.token;
+        jwt.verify(token,process.env.ACCESS_KEY,async (err,user)=>{
+            if(err){return res.sendStatus(500)}
+            else{
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
+                });
+                if (r.length) {
+                    r[0].Cart.push(req.body.productId);
+                    r[0].save()
+                    .then(()=>{
+                        return res.sendStatus(200);
+                    })
+                    .catch((err)=>{
+                        return res.sendStatus(500);
+                    })
+                } else {
+                    return res.sendStatus(404);
+                }
+            }
+        })
+    } catch (error) {
+        
+    }
+})
+
+app.delete('/removeFromCart',(req,res)=>{
+    try {
+        const token = req.query.token;
+        jwt.verify(token, process.env.ACCESS_KEY, async (err, user) => {
+            if (err) {
+                return res.sendStatus(501);
+            } else {
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
+                });
+                if (r.length) {
+                    const remove = req.body.productId;
+                    let newCart = [];
+                    let f=false;
+                    r[0].Cart.forEach((e)=>{
+                        if(f || e!==remove ){
+                            newCart.push(e);
+                        }
+                        else if(e===remove){
+                            f=true;
+                        }
+                    })
+                    r[0].Cart = newCart;
+                    r[0].save()
+                    .then(()=>{
+                        return res.sendStatus(202)
+                    })
+                    .catch((err)=>{
+
+                    })
+                } else {
+                    return res.sendStatus(404);
+                }
+            }
+        });
+    } catch (error) {}
+})
+
+app.get('/customerOrders',(req,res)=>{
+    try {
+        const token = req.query.token;
+        jwt.verify(token,process.env.ACCESS_KEY,async(err,user)=>{
+            if(err){
+                return res.sendStatus(401);
+            }else{
+                const r = await User.find({
+                    Email: user.Email,
+                    Password: user.Password,
+                });
+                if(r.length && r[0].Type===1){
+                    const sId = r[0].SellerId;
+                    const seller = await Seller.find({
+                        _id : sId
+                    })
+                    res.status(200).send({orders : seller[0].Orders,id : sId});
+                }else{
+                    return res.sendStatus(404);
+                }
+            }
+        })
+    } catch (error) {
+        
+    }
+})
+
+app.get('/individualOrder',async (req,res)=>{
+    try {
+        const _id = req.query.order;
+        const sId = req.query.sId;
+        const order = await Order.find({_id});
+
+        if (order.length && order[0].SellerId===sId) {
+            return res.status(200).send(order[0]);
+        } else {
+            return res.sendStatus(404);
+        }
+    } catch (error) {
+        return res.sendStatus(401);
+    }
+})
+
+app.post('/delivered' , async (req,res)=>{
+    try {
+        // console.log(req.body);
+        const orderId = req.body.order;
+        const sellerId = req.body.seller;
+        
+        const order = await Order.find({_id : orderId});
+        const seller = await Seller.find({_id : sellerId})
+        // console.log(order);
+        if(order.length && seller.length &&  order[0].SellerId === sellerId){
+            order[0].status = 1;
+            order[0].save()
+            .then(()=>{
+                let newOrder = [];
+                let f = false;
+                seller[0].Orders.forEach((e) => {
+                    if (f || e !== orderId) {
+                        newOrder.push(e);
+                    } else if (e === orderId) {
+                        f = true;
+                    }
+                });
+                seller[0].Orders = newOrder;
+                seller[0].save().then(() => {
+                    return res.sendStatus(200);
+                })
+                .catch((err)=>{
+
+                    return res.sendStatus(501);
+                })
+            })
+            .catch((err)=>{
+                return res.sendStatus(404)
+            })
+        }else{
+            return  res.sendStatus(401)
+        }
+    } catch (error) {
+        return res.sendStatus(501);
     }
 })
 

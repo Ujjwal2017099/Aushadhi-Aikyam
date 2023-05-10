@@ -1,17 +1,38 @@
 import React , {useState} from 'react'
 import './mainBody.css'
 import card1 from '../assets/doctor.jpg'
+import { URl } from './AxiosUtil'
+import axios from 'axios'
 
-const MainBody = () => {
+const MainBody = ({searchResult,setSearchResult}) => {
   const [pin,setPin] = useState('');
   const [med,setMed] = useState('');
+  
   const handleSubmit = (e)=>{
     e.preventDefault();
     localStorage.setItem('PIN',pin)
     alert('Your Pin has been updated');
   }
   const handleCitySearch = (e)=>{
-    e.preventDefault(); 
+    e.preventDefault();
+    const PIN = JSON.parse(localStorage.getItem('PIN'));
+
+    if(PIN.length !== 0){
+      const url = `${URl}/findProducts?title=${med}&pin=${PIN}`
+      const options = {
+        method : 'GET',
+        headers : {'content-type' : 'application/json'},
+        url
+      }
+      axios(options)
+      .then((res)=>{
+        setSearchResult(res.data);
+      }).catch((err)=>{
+        alert('Something went wrong')
+      })
+    }else{
+      alert('Enter valid PIN code')
+    }
   }
   return (
     <>

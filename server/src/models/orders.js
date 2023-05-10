@@ -18,8 +18,12 @@ const orderSchema = new mongoose.Schema({
         default : 1
     },
     Status : {
-        type:Boolean,
-        default : false
+        type:Number,
+        default : 0
+    },
+    Address : {
+        type : String,
+        required : true
     }
 });
 

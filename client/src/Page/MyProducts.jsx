@@ -5,41 +5,54 @@ import './style.css'
 import Navbar from '../Components/Navbar'
 import axios from 'axios'
 import { URl } from '../Components/AxiosUtil'
+import AddProduct from '../Components/AddProduct'
 
 const MyProducts = () => {
   const navigate = useNavigate();
-    const [title,setTitle] = useState("This is title")
-    const [description,setDescription] = useState("this is description")
-    const [price,setPrice] = useState("565")
+    
     const [products,setProducts] = useState([]);
     const token = JSON.parse(localStorage.getItem('id'));
 
     useEffect(()=>{
       if(token && token.length){
-        const url = `${URl}`
+        const url = `${URl}/getProducts?token=${token}`
+        const options = {
+          method : 'GET',
+          headers : {'content-type' : 'application/json'},
+          url
+        }
+
+        axios(options)
+        .then((res)=>{
+          // console.log(res.data);
+          setProducts(res.data.products);
+        }).catch((err)=>{
+          alert('Something went wrong please try again later')
+          navigate('/login')
+        })
       }else{
         navigate('/login')
       }
     },[])
-
+    const [addPrd,setAddPrd] = useState(false);
     const addProduct = ()=>{
-
+      setAddPrd(!addPrd);
     }
+
   return (
     <div className='products-main'>
       <Navbar/>
         <div className='procduts-add'>
             <button className='btn' onClick={addProduct}>Add Product</button>
         </div>
+        {addPrd&&<AddProduct setAddPrd = {setAddPrd} />}
 
-        <ProductCard title={title} description={description} price={price} />
-        <ProductCard title={title} description={description} price={price} />
-        <ProductCard title={title} description={description} price={price} />
-        <ProductCard title={title} description={description} price={price} />
-        <ProductCard title={title} description={description} price={price} />
-        <ProductCard title={title} description={description} price={price} />
-        <ProductCard title={title} description={description} price={price} />
-        <ProductCard title={title} description={description} price={price} />
+        {
+          products.map((e)=>{
+            return (<ProductCard productId={e} />)
+          })
+        }
+        
 
     </div>
   )

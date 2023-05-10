@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import Loader from '../Components/Loader'
 import MainBody from '../Components/MainBody'
 import Footer from '../Components/Footer'
+import LocalSearchResult from './LocalSearchResult'
 
 const Home = () => {
   const style = {
@@ -17,7 +18,8 @@ const Home = () => {
  
     const [text,setText] = useState([]);
     const [data,setData] = useState([]);
-    const [loader,setLoder] = useState(false)
+    const [loader,setLoder] = useState(false);
+    const [searchResult,setSearchResult] = useState([]);
   return (
     <motion.div 
       initial={{opacity:0}}
@@ -31,8 +33,17 @@ const Home = () => {
         <GetPrescription text={text} data={data} setData={setData} loader={loader} setLoder={setLoder}/>
         : 
         <>
-        <Main data={data} setData={setData} loader={loader} setLoder={setLoder} />
-        {!loader && !data.length && <MainBody/>}
+        {
+          searchResult.length ? <>
+            <LocalSearchResult searchResult={searchResult} />          
+          </> : 
+          <>
+          
+            <Main data={data} setData={setData} loader={loader} setLoder={setLoder} />
+            {!loader && !data.length && <MainBody searchResult={searchResult} setSearchResult={setSearchResult}/>}
+          
+          </>
+        }
         <Footer/>
         </>
       }
