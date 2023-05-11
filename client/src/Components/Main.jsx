@@ -7,23 +7,67 @@ import axios from 'axios'
 import { Audio } from 'react-loader-spinner'
 import { URl } from './AxiosUtil';
 import Loader from './Loader';
+import LocalSearchResult from '../Page/LocalSearchResult';
 
-const Main = ({data,setData,loader,setLoder}) => {
-  
+const Main = ({loader,setLoder,netmeds,setNetmeds,apollopharmacy,setApollopharmacy,oneMg,setOneMg,pharmeasy,setPharmeasy,data,setData}) => {
+  const pin = JSON.parse(localStorage.getItem('PIN'))
   const [search , setSearch] = useState("");
-  const getData = ()=>{
+  const [localResult , setLocalResult] = useState([]);
+  
+  useEffect(()=>{
+    if(netmeds.length && apollopharmacy.length && pharmeasy.length && oneMg.length){
+      setLoder(false)
+    }
+  },[netmeds,apollopharmacy,pharmeasy,oneMg])
+
+  const getData = async ()=>{
     // console.log(server);
-    axios({
+    const option1 = {
       method: "GET",
       headers: { 'content-type': 'application/json' },
-      url: `${URl}/?name=${search}`,
+      url: `${URl}/pharmeasy?name=${search}`,
+    }
+    const option2 = {
+      method: "GET",
+      headers: { 'content-type': 'application/json' },
+      url: `${URl}/1mg?name=${search}`,
+    }
+    const option3 = {
+      method: "GET",
+      headers: { 'content-type': 'application/json' },
+      url: `${URl}/apollopharmacy?name=${search}`,
+    }
+    const option4 = {
+      method: "GET",
+      headers: { 'content-type': 'application/json' },
+      url: `${URl}/netmeds?name=${search}`,
+    }
+    try {
+      axios(option1).then((res)=>{setPharmeasy(res.data)}).catch((err)=>{})
+      axios(option2).then((res)=>{setOneMg(res.data)}).catch((err)=>{})
+      axios(option3).then((res)=>{setApollopharmacy(res.data)}).catch((err)=>{})
+      axios(option4).then((res)=>{setNetmeds(res.data)}).catch((err)=>{})
+
+      // setNetmeds(data4)
+      // setApollopharmacy(data3)
+      // setOneMg(data2)
+      // setPharmeasy(data1)
+      // console.log(data1);
+      // console.log(data2);
+      // console.log(data3);
+      // console.log(netmeds);
+    } catch (error) {
       
+    }
+    axios({
+      method : 'GET',
+      headers : {'content-type' : 'application/json'},
+      url : `${URl}/findProducts?title=${search}&pin=${pin}`
     }).then((res)=>{
-      setData(res.data);
-      setLoder(false);
       // console.log(res.data);
+      setLocalResult(res.data);
     }).catch((err)=>{
-      // console.log(err);
+
     })
   }
   const [history,setHistory] = useState([]);
@@ -60,6 +104,7 @@ const Main = ({data,setData,loader,setLoder}) => {
      confirmBox.show();
   }
   return (
+    <div style={{display:'flex',width:'100%',justifyContent:'center'}}>
     <div className='main-main'>
         <form action="" onSubmit={(e)=>{e.preventDefault(); setLoder(true);setData([]); functionAlert();getData()}} >
             <input type="text" placeholder='Enter medicine name' value={search} onChange={(e)=>{setSearch(e.target.value)}} required/>
@@ -73,40 +118,143 @@ const Main = ({data,setData,loader,setLoder}) => {
         </span>
       </div>
       <span style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
-        {
-          loader&&<div className='loader'>
-                  <Loader/>
-          </div>
-        }
-        {data.length===0 ? <></>:
+        
+        {netmeds.length===0 ? <></>:
         <table className='data'>
           <tr className='data-row table-header'>
+          
             <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
             <td >Name</td>
             <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
           </tr>
             {
-              data.map((e)=>{
-                
-                return (
-                  <>
-                  {
-                    e.map((el)=>{
-                      if(el.B_R!==404){
-                        return <tr className='data-row'>
-                          <td><Link to={el.link} target='_blank'>{el.company}</Link></td>
-                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
-                          <td>{el.price}</td>
-                        </tr>
-                      }
-                    })
+              netmeds.map((el)=>{
+                if(el.B_R!==404){
+                  return (
+                    <>
+                    {
+                      // e.map((el)=>{
+
+                           <tr className='data-row'>
+                            <td><Link to={el.link} target='_blank'>Netmeds</Link></td>
+                            <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                            <td>{el.price}</td>
+                          </tr>
+
+                      // })
+                    }
+                    </>
+                  )
                   }
-                  </>
-                )
               })
             }
         </table>}
+        {pharmeasy.length===0 ? <></>:
+        <table className='data'>
+          <tr className='data-row table-header'>
+          
+            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+            <td >Name</td>
+            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+          </tr>
+            {
+              pharmeasy.map((el)=>{
+                if(el.B_R!==404){
+                  return (
+                    <>
+                    {
+                      // e.map((el)=>{
+
+                           <tr className='data-row'>
+                            <td><Link to={el.link} target='_blank'>Pharmeasy</Link></td>
+                            <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                            <td>{el.price}</td>
+                          </tr>
+
+                      // })
+                    }
+                    </>
+                  )
+                  }
+              })
+            }
+        </table>}
+        {oneMg.length===0 ? <></>:
+        <table className='data'>
+          <tr className='data-row table-header'>
+          
+            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+            <td >Name</td>
+            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+          </tr>
+            {
+              oneMg.map((el)=>{
+                if(el.B_R!==404){
+                  return (
+                    <>
+                    {
+                      // e.map((el)=>{
+
+                           <tr className='data-row'>
+                            <td><Link to={el.link} target='_blank'>1mg</Link></td>
+                            <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                            <td>{el.price}</td>
+                          </tr>
+
+                      // })
+                    }
+                    </>
+                  )
+                  }
+              })
+            }
+        </table>}
+        {apollopharmacy.length===0 ? <></>:
+        <table className='data'>
+          <tr className='data-row table-header'>
+          
+            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+            <td >Name</td>
+            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+          </tr>
+            {
+              apollopharmacy.map((el)=>{
+                if(el.B_R!==404){
+                  return (
+                    <>
+                    {
+                      // e.map((el)=>{
+
+                           <tr className='data-row'>
+                            <td><Link to={el.link} target='_blank'>Apollopharmacy</Link></td>
+                            <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                            <td>{el.price}</td>
+                          </tr>
+
+                      // })
+                    }
+                    </>
+                  )
+                  }
+              })
+            }
+        </table>}
+
+        {
+          loader&&<div className='loader'>
+                  <Loader/>
+          </div>
+        }
+        
       </span>
+    </div>
+    {
+      (localResult && localResult.length !==0) &&
+      <div style={{width:'25%',height:"100%",borderLeft:'1px solid grey',display:'block',marginTop: '70px'}}>
+          <h3 style={{width:'100%',display:'flex',justifyContent:'center',fontFamily:'Poppins'}}>Local Chemist</h3>
+          <LocalSearchResult searchResult={localResult} />
+      </div>
+    }
     </div>
   )
 }

@@ -13,6 +13,7 @@ const fs = require('fs')
 const Seller = require('./models/seller')
 const Product = require('./models/products')
 const Order = require('./models/orders')
+const axios = require('axios')
 
 const corsOptions = {
     origin: "*",
@@ -64,6 +65,286 @@ app.get('/',async (req,res)=>{
         res.status(400).send("error");
     }
     
+})
+
+app.get("/pharmeasy" , async (req,res)=>{
+    try {
+        const name = req.query.name;
+        const pharmeasyData = await Link.find({ name: 'pharmeasy' });
+        if(pharmeasyData.length === 0 ) return res.sendStatus(501);
+        if(pharmeasyData[0].isAPI){
+            const arr = pharmeasyData[0].API.split('^');
+            let url = ""
+            // console.log(arr);
+            arr.forEach((e)=>{
+                if(e.length) url += e+name;
+            })
+            const options = {
+                method : 'GET',
+                headers : {'content-type' : 'application/json'},
+                url
+            }
+            
+            const response = await axios(options)
+            // console.log(response);
+            if (
+                response.data &&
+                response.data.data &&
+                response.data.data.products &&
+                response.data.data.products.length
+            ){
+                let ans=[];
+                let cnt=5;
+                let i=0;
+
+                while (i < response.data.data.products.length && cnt--){
+                    ans.push({
+                        name: response.data.data.products[i].name,
+                        price: response.data.data.products[i].mrpDecimal,
+                    });
+                    i++;
+                }
+                return res.status(200).send(ans);
+            }
+        }
+
+        let str = pharmeasyData[0].url;
+        let arr = str.split("^");
+        str = arr[0] + name;
+        for (let i = 1; i < arr.length; i++) str += arr[i];
+        e.url = str;
+        // console.log(e);
+        let options = {
+            mode: "text",
+            pythonOptions: ["-u"],
+            args: [
+                str,
+                e.mainContainer,
+                e.container,
+                e.bit,
+                e.priceContainer,
+                e.linkBit,
+                e.linkContainer,
+            ],
+        };
+        let x = await PythonShell.run(
+            "src/scrap_and_ocr/get_medicine_data.py",
+            options,
+            function (err, result) {
+                if (err) console.log(err);
+            }
+        );
+        let temp = "";
+        for (let i = 0; i < x.length; i++) temp += x[i];
+        temp = JSON.parse(temp);
+        let company = e.name;
+        temp.forEach((e) => {
+            e.company = company;
+        });
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+});
+
+app.get("/apollopharmacy", async (req, res) => {
+    try {
+        const name = req.query.name;
+        const apollopharmacyData = await Link.find({ name: "apollopharmacy" });
+        if (apollopharmacyData.length === 0) return res.sendStatus(501);
+        if (apollopharmacyData[0].isAPI) {
+            const arr = apollopharmacyData[0].API.split("^");
+            let url = "";
+            // console.log(arr);
+            arr.forEach((e) => {
+                if (e.length) url += e + name;
+            });
+            const options = {
+                method: "GET",
+                headers: { "content-type": "application/json" },
+                url,
+            };
+
+            const response = await axios(options);
+            // return res.status(200).send(response.data);
+            if (
+                response.data.pageProps &&
+                response.data.pageProps.productsDetails &&
+                response.data.pageProps.productsDetails.length
+            ) {
+                let ans = [];
+                let cnt = 5;
+                let i = 0;
+
+                while (
+                    i < response.data.pageProps.productsDetails.length &&
+                    cnt--
+                ) {
+                    ans.push({
+                        name: response.data.pageProps.productsDetails[i].name,
+                        price: response.data.pageProps.productsDetails[i].price,
+                    });
+                    i++;
+                }
+                return res.status(200).send(ans);
+            }
+        }
+
+        let str = apollopharmacyData[0].url;
+        let arr = str.split("^");
+        str = arr[0] + name;
+        for (let i = 1; i < arr.length; i++) str += arr[i];
+        e.url = str;
+        // console.log(e);
+        let options = {
+            mode: "text",
+            pythonOptions: ["-u"],
+            args: [
+                str,
+                e.mainContainer,
+                e.container,
+                e.bit,
+                e.priceContainer,
+                e.linkBit,
+                e.linkContainer,
+            ],
+        };
+        let x = await PythonShell.run(
+            "src/scrap_and_ocr/get_medicine_data.py",
+            options,
+            function (err, result) {
+                if (err) console.log(err);
+            }
+        );
+        let temp = "";
+        for (let i = 0; i < x.length; i++) temp += x[i];
+        temp = JSON.parse(temp);
+        let company = e.name;
+        temp.forEach((e) => {
+            e.company = company;
+        });
+    } catch (error) {
+        return res.sendStatus(500);
+    }
+});
+
+app.get('/1mg' , async (req,res)=>{
+    try {
+        const name = req.query.name;
+        const onemgData = await Link.find({ name: "1mg" });
+        if (onemgData.length === 0) return res.sendStatus(501);
+        if (onemgData[0].isAPI) {   
+            const arr = onemgData[0].API.split("^");
+            let url = "";
+            // console.log(arr);
+            arr.forEach((e) => {
+                if (e.length) url += e + name;
+            });
+            const options = {
+                method: "GET",
+                headers: { "content-type": "application/json" },
+                url,
+            };
+
+            const response = await axios(options);
+            // return res.status(200).send(response.data);
+            if (response.data) {
+                let ans = [];
+                let cnt = 5;
+                let i = 0;
+            }
+        }
+        let str = onemgData[0].url;
+        let arr = str.split("^");
+        str = arr[0] + name;
+        for (let i = 1; i < arr.length; i++) str += arr[i];
+        onemgData[0].url = str;
+        // console.log(e);
+        let options = {
+            mode: "text",
+            pythonOptions: ["-u"],
+            args: [
+                str,
+                onemgData[0].mainContainer,
+                onemgData[0].container,
+                onemgData[0].bit,
+                onemgData[0].priceContainer,
+                onemgData[0].linkBit,
+                onemgData[0].linkContainer,
+            ],
+        };
+        let x = await PythonShell.run(
+            "src/scrap_and_ocr/get_medicine_data.py",
+            options,
+            function (err, result) {
+                if (err) console.log(err);
+            }
+        );
+        x= JSON.parse(x)
+        return res.status(200).send(x);
+    } catch (error) {
+        console.log(error.message);
+        return res.sendStatus(500);
+    }
+})
+
+app.get('/netmeds' , async (req,res)=>{
+    try {
+        const name = req.query.name;
+        const netmedsData = await Link.find({ name: "netmeds" });
+        if (netmedsData.length === 0) return res.sendStatus(501);
+        if (netmedsData[0].isAPI) {   
+            const arr = netmedsData[0].API.split("^");
+            let url = "";
+            // console.log(arr);
+            arr.forEach((e) => {
+                if (e.length) url += e + name;
+            });
+            const options = {
+                method: "GET",
+                headers: { "content-type": "application/json" },
+                url,
+            };
+
+            const response = await axios(options);
+            // return res.status(200).send(response.data);
+            if (response.data) {
+                let ans = [];
+                let cnt = 5;
+                let i = 0;
+            }
+        }
+        let str = netmedsData[0].url;
+        let arr = str.split("^");
+        str = arr[0] + name;
+        for (let i = 1; i < arr.length; i++) str += arr[i];
+        netmedsData[0].url = str;
+        // console.log(e);
+        let options = {
+            mode: "text",
+            pythonOptions: ["-u"],
+            args: [
+                str,
+                netmedsData[0].mainContainer,
+                netmedsData[0].container,
+                netmedsData[0].bit,
+                netmedsData[0].priceContainer,
+                netmedsData[0].linkBit,
+                netmedsData[0].linkContainer,
+            ],
+        };
+        let x = await PythonShell.run(
+            "src/scrap_and_ocr/get_medicine_data.py",
+            options,
+            function (err, result) {
+                if (err) console.log(err);
+            }
+        );
+        x= JSON.parse(x)
+        return res.status(200).send(x);
+    } catch (error) {
+        console.log(error.message);
+        return res.sendStatus(500);
+    }
 })
 
 app.post('/register',async (req,res)=>{
@@ -321,6 +602,9 @@ app.get('/findProducts',async (req,res)=>{
             Name : req.query.title,
             Pin : req.query.pin
         })
+
+        // console.log(req.query.title);
+        // console.log(req.query.pin);
 
         res.status(200).send(prd);
     } catch (error) {

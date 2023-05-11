@@ -20,6 +20,10 @@ const Home = () => {
     const [data,setData] = useState([]);
     const [loader,setLoder] = useState(false);
     const [searchResult,setSearchResult] = useState([]);
+    const [oneMg,setOneMg] = useState([])
+    const [pharmeasy,setPharmeasy] = useState([])
+    const [apollopharmacy,setApollopharmacy] = useState([])
+    const [netmeds,setNetmeds] = useState([])
   return (
     <motion.div 
       initial={{opacity:0}}
@@ -35,12 +39,12 @@ const Home = () => {
         <>
         {
           searchResult.length ? <>
-            <LocalSearchResult searchResult={searchResult} />          
+            <LocalSearchResult netmeds={netmeds} setNetmeds={setNetmeds} apollopharmacy={apollopharmacy} setApollopharmacy={setApollopharmacy} oneMg = {oneMg} setOneMg={setOneMg} pharmeasy = {pharmeasy} setPharmeasy={setPharmeasy} searchResult={searchResult} />          
           </> : 
           <>
           
-            <Main data={data} setData={setData} loader={loader} setLoder={setLoder} />
-            {!loader && !data.length && <MainBody searchResult={searchResult} setSearchResult={setSearchResult}/>}
+            <Main netmeds={netmeds} setNetmeds={setNetmeds} apollopharmacy={apollopharmacy} setApollopharmacy={setApollopharmacy} oneMg = {oneMg} setOneMg={setOneMg} pharmeasy = {pharmeasy} setPharmeasy={setPharmeasy} data={data} setData={setData} loader={loader} setLoder={setLoder} />
+            {!loader && !data.length && <MainBody  searchResult={searchResult} setSearchResult={setSearchResult}/>}
           
           </>
         }
