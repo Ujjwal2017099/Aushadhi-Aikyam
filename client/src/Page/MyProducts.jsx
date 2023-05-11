@@ -13,6 +13,7 @@ const MyProducts = () => {
     const [products,setProducts] = useState([]);
     const token = JSON.parse(localStorage.getItem('id'));
 
+    const [addPrd,setAddPrd] = useState(false);
     useEffect(()=>{
       if(token && token.length){
         const url = `${URl}/getProducts?token=${token}`
@@ -33,8 +34,7 @@ const MyProducts = () => {
       }else{
         navigate('/login')
       }
-    },[])
-    const [addPrd,setAddPrd] = useState(false);
+    },[addPrd])
     const addProduct = ()=>{
       setAddPrd(!addPrd);
     }
