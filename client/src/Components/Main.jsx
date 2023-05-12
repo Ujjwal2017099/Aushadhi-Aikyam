@@ -13,6 +13,7 @@ const Main = ({loader,setLoder,netmeds,setNetmeds,apollopharmacy,setApollopharma
   const pin = JSON.parse(localStorage.getItem('PIN'))
   const [search , setSearch] = useState("");
   const [localResult , setLocalResult] = useState([]);
+  const [finalLocalResult , setFinalLocalResult] = useState([]);
   
   useEffect(()=>{
     if(netmeds && apollopharmacy && pharmeasy && oneMg &&netmeds.length && apollopharmacy.length && pharmeasy.length && oneMg.length){
@@ -20,8 +21,49 @@ const Main = ({loader,setLoder,netmeds,setNetmeds,apollopharmacy,setApollopharma
     }
   },[netmeds,apollopharmacy,pharmeasy,oneMg])
 
+  
+  useEffect(()=>{
+    const temp = finalLocalResult;
+    // console.log(temp);
+    localResult.forEach((e)=>{
+      temp.push(e);
+    })
+    setFinalLocalResult(temp);
+    console.log(finalLocalResult);
+    // console.log(localResult);
+    
+  },[localResult])
+
   const getData = async ()=>{
     // console.log(server);
+    setApollopharmacy([])
+    setNetmeds([])
+    setOneMg([])
+    setPharmeasy([])
+    setFinalLocalResult([])
+    setLoder(true);
+    axios({
+      method : 'GET',
+      headers : {'content-type' : 'application/json'},
+      url : `${URl}/autoCorrect?name=${search}`
+    }).then((res)=>{
+      // setSearch(res.data);
+      console.log(res.data);
+      const medicineName = res.data;
+      axios({
+        method : 'GET',
+        headers : {'content-type' : 'application/json'},
+        url : `${URl}/findProducts?title=${medicineName}&pin=${pin}`
+      }).then((res)=>{
+        console.log(res.data);
+        setLocalResult(res.data);
+      }).catch((err)=>{
+      
+      })
+    })
+    .catch((err)=>{
+
+    })
     const option1 = {
       method: "GET",
       headers: { 'content-type': 'application/json' },
@@ -67,8 +109,9 @@ const Main = ({loader,setLoder,netmeds,setNetmeds,apollopharmacy,setApollopharma
       // console.log(res.data);
       setLocalResult(res.data);
     }).catch((err)=>{
-
+    
     })
+    
   }
   const [history,setHistory] = useState([]);
   useEffect(()=>{
@@ -249,10 +292,10 @@ const Main = ({loader,setLoder,netmeds,setNetmeds,apollopharmacy,setApollopharma
       </span>
     </div>
     {
-      (localResult && localResult.length !==0) &&
+      (finalLocalResult && finalLocalResult.length !==0) &&
       <div style={{width:'25%',height:"100%",borderLeft:'1px solid grey',display:'block',marginTop: '70px'}}>
           <h3 style={{width:'100%',display:'flex',justifyContent:'center',fontFamily:'Poppins'}}>Local Chemist</h3>
-          <LocalSearchResult searchResult={localResult} />
+          <LocalSearchResult searchResult={finalLocalResult} />
       </div>
     }
     </div>

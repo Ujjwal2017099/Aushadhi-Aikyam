@@ -77,6 +77,8 @@ const GetPrescription = ({text,loader,setLoder,setSearchResult,searchResult}) =>
       setPharmeasyCnt(text.length)
       setNetmedsCnt(text.length)
       
+      
+
       await text.forEach(async (e)=>{
         if(e.length){
           if(present){

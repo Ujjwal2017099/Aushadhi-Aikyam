@@ -23,6 +23,31 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(fileUpload());
 
+app.get('/autoCorrect' ,async (req,res)=>{
+    // console.log('ok');
+    try {
+        const name = req.query.name;
+        const path = 'src/autoCorrect/auto-correct.py'
+        let options = {
+            mode: "text",
+            pythonOptions: ["-u"],
+            args: [name],
+        };
+
+        let x = await PythonShell.run(
+            path,
+            options,
+            function (err, result) {
+                if (err) console.log(err);
+            }
+        );
+        // console.log(x);
+        res.status(200).send(x[0]);
+    } catch (error) {
+        res.sendStatus(400);
+    }
+})
+
 app.get('/',async (req,res)=>{
     let ans = [];
     let complete = false;
