@@ -33,7 +33,7 @@ const Cart = () => {
                 // console.log("err")
             })
         }else{
-            alert('You have to login first')
+            toast('You have to login first')
             navigate('/login')
         }
     },[findCart])
@@ -71,10 +71,10 @@ const Cart = () => {
                 // console.log('done');
                 setFindCart(!findCart)
             }).catch((err)=>{
-                alert('OOps something went wrong');
+                toast('OOps something went wrong');
             })
         }else{
-            alert('Something went wrong try again later');
+            toast('Something went wrong try again later');
             navigate('/login');
         }
     }
@@ -89,7 +89,7 @@ const Cart = () => {
         if(shipping.length){
             // console.log('shipped');
             if(!token.length){
-                alert('Something went wrong');
+                toast('Something went wrong');
                 navigate('/login');
             }
             const url = `${URl}/placeOrder?token=${token}`
@@ -111,12 +111,12 @@ const Cart = () => {
                     // console.log('ok');
                     handleRemove(_id)
                 }).catch((err)=>{
-                    alert('Something unexpected occured please try later')
+                    toast('Something unexpected occured please try later')
                     navigate('/')
                 })
             }
         }else{
-            alert('Please enter your address');
+            toast('Please enter your address');
         }
     }
     const notify = () => toast("Your order is successfully placed ");
@@ -165,7 +165,7 @@ const Cart = () => {
 
         </div>
         {
-            data.length ? <div style={{position:'sticky',zIndex:'1' ,boxSizing:"border-box",padding:'10px 15px', borderTop:'2px solid #3d6aff',backgroundColor:'rgb(190 202 245)' , filter:`blur(${blur}px)`}}>
+            data.length ? <div style={{position:'absolute' ,width:'100%',zIndex:'1',bottom : '0px' ,boxSizing:"border-box",padding:'10px 15px', borderTop:'2px solid #3d6aff',backgroundColor:'rgb(190 202 245)' , filter:`blur(${blur}px)`}}>
             
             <h2 style={{fontFamily:'Poppins'}}>Total Price is {totalPrice}</h2>
             <button className='btn' onClick={buyButton} >Buy Now</button>

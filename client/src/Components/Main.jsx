@@ -15,7 +15,7 @@ const Main = ({loader,setLoder,netmeds,setNetmeds,apollopharmacy,setApollopharma
   const [localResult , setLocalResult] = useState([]);
   
   useEffect(()=>{
-    if(netmeds.length && apollopharmacy.length && pharmeasy.length && oneMg.length){
+    if(netmeds && apollopharmacy && pharmeasy && oneMg &&netmeds.length && apollopharmacy.length && pharmeasy.length && oneMg.length){
       setLoder(false)
     }
   },[netmeds,apollopharmacy,pharmeasy,oneMg])
@@ -73,7 +73,7 @@ const Main = ({loader,setLoder,netmeds,setNetmeds,apollopharmacy,setApollopharma
   const [history,setHistory] = useState([]);
   useEffect(()=>{
     const token = JSON.parse(localStorage.getItem('id'));
-    if(search.length && token.length){
+    if(search.length && token && token.length){
       axios({
         method: 'GET',
         headers: {'content-type' : 'application/json'},

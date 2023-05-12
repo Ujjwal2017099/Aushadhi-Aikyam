@@ -4,6 +4,9 @@ import { URl } from '../Components/AxiosUtil';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import OrderCard from '../Components/OrderCard';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const CustomerOrders = () => {
     const navigate = useNavigate();
@@ -25,15 +28,16 @@ const CustomerOrders = () => {
           setOrderList(res.data.orders);
           setSid(res.data.id);
         }).catch((err)=>{
-          alert('Some error occured')
+          toast('Some error occured')
         })
       }else{
-        alert('Login first');
+        toast('Login first');
 
       }
     },[isUpdate])
   return (
     <div style={{boxSizing:'border-box',padding:'15px 25px'}}>
+      <ToastContainer/>
         <Navbar/>
         <div>
           {

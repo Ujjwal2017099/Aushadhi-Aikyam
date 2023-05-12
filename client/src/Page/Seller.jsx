@@ -5,6 +5,9 @@ import {Link} from 'react-router-dom'
 import {URl} from '../Components/AxiosUtil'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function Gst({gst,setGst}) {
   const style = {
@@ -84,9 +87,9 @@ const Seller = () => {
     const rPin = /^\d{6}$/ , rGst = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9A-Z]{1}$/;
     const rNumber = /^(?:\+91|91)?[6-9]\d{9}$/;
 
-    if(!rPin.test(pin)) {alert('Entered Pin is not vaild')}
-    else if(!rNumber.test(number)) {alert('Entered Mobile no. is not vaild')}
-    else if(!rGst.test(gst)) {alert('Entered Mobile no. is not vaild')}
+    if(!rPin.test(pin)) {toast('Entered Pin is not vaild')}
+    else if(!rNumber.test(number)) {toast('Entered Mobile no. is not vaild')}
+    else if(!rGst.test(gst)) {toast('Entered Mobile no. is not vaild')}
     else{
       const url = `${URl}/upgradeToSeller?token=${token}`;
       const data = JSON.stringify({
@@ -114,6 +117,7 @@ const Seller = () => {
         steps={steps}
         activeStep={activeStep}
         />
+        <ToastContainer />
 
         <div style={{
           width : '100%',

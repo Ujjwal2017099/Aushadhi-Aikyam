@@ -3,6 +3,8 @@ import './mainBody.css'
 import card1 from '../assets/doctor.jpg'
 import { URl } from './AxiosUtil'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MainBody = ({searchResult,setSearchResult}) => {
   const [pin,setPin] = useState('');
@@ -10,14 +12,18 @@ const MainBody = ({searchResult,setSearchResult}) => {
   
   const handleSubmit = (e)=>{
     e.preventDefault();
-    localStorage.setItem('PIN',pin)
-    alert('Your Pin has been updated');
+    const testPin = /^\d{6}$/
+    if(testPin.test(pin)){
+      localStorage.setItem('PIN',pin)
+      toast('Your Pin has been updated');
+    }
+    else toast('Enter valid PIN code')
   }
   const handleCitySearch = (e)=>{
     e.preventDefault();
     const PIN = JSON.parse(localStorage.getItem('PIN'));
 
-    if(PIN.length !== 0){
+    if(PIN && PIN.length !== 0){
       const url = `${URl}/findProducts?title=${med}&pin=${PIN}`
       const options = {
         method : 'GET',
@@ -28,10 +34,10 @@ const MainBody = ({searchResult,setSearchResult}) => {
       .then((res)=>{
         setSearchResult(res.data);
       }).catch((err)=>{
-        alert('Something went wrong')
+        toast('Something went wrong')
       })
     }else{
-      alert('Enter valid PIN code')
+      toast('Enter valid PIN code')
     }
   }
   return (
@@ -49,7 +55,7 @@ const MainBody = ({searchResult,setSearchResult}) => {
             <section>
                 Find Medicine From Different Websites and Your Local Seller at One Place. 
             </section>
-
+        <ToastContainer/>
         </div>
         <div style={{
             fontFamily:'Poppins'
@@ -64,7 +70,7 @@ const MainBody = ({searchResult,setSearchResult}) => {
                   <label className="title">Enter Your Pin Code</label>
                   <span className="subtitle">Get Medicine from your local chemist</span>
                 </div>
-                <input required placeholder="PIN Code" pattern='^\d{6}$' value={pin} onChange={(e)=>{setPin(e.target.value)}} type="text" className="input_field"/>
+                <input required placeholder="PIN Code"  value={pin} onChange={(e)=>{setPin(e.target.value)}} type="text" className="input_field"/>
                 <button type='submit' className="submit">Submit</button>
               </form>
             </div>

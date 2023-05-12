@@ -3,6 +3,8 @@ import mainIcon from '../assets/loginRightIcon.png'
 import axios from 'axios'
 import {URl} from './AxiosUtil'
 import { useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddProduct = ({setAddPrd}) => {
     const navigate = useNavigate();
@@ -28,10 +30,10 @@ const AddProduct = ({setAddPrd}) => {
 
             axios(options)
             .then((res)=>{
-                alert('Your Product Successfully added')
+                toast('Your Product Successfully added')
                 setAddPrd(false)
             }).catch((err)=>{
-                alert('Something went wrong please try later')
+                toast('Something went wrong please try later')
             })
         }else{
             navigate('/login');
@@ -40,6 +42,7 @@ const AddProduct = ({setAddPrd}) => {
 
   return (
     <div style={{position:'absolute', boxSizing:'border-box' , background:'#fff',zIndex:'1',width:'95%',display:'flex',justifyContent:'center'}}>
+        <ToastContainer />
         <div className="login-main-right" style={{width:'50%',fontFamily:'Poppins'}}>
             <div className="login-right-inside">
                 <div className="login-heading">

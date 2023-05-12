@@ -6,6 +6,8 @@ import Navbar from '../Components/Navbar'
 import axios from 'axios'
 import { URl } from '../Components/AxiosUtil'
 import AddProduct from '../Components/AddProduct'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyProducts = () => {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const MyProducts = () => {
           // console.log(res.data);
           setProducts(res.data.products);
         }).catch((err)=>{
-          alert('Something went wrong please try again later')
+          toast("Something went wrong please try again later");
           navigate('/login')
         })
       }else{
@@ -41,6 +43,7 @@ const MyProducts = () => {
 
   return (
     <div className='products-main'>
+      <ToastContainer />
       <Navbar/>
         <div className='procduts-add'>
             <button className='btn' onClick={addProduct}>Add Product</button>

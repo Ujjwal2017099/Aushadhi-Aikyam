@@ -15,7 +15,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
     const [present,setPresent] = useState(false);
 
     useEffect(()=>{
-      if(token.length){
+      if(token && token.length){
         axios({
           method: 'GET',
           headers: {'content-type' : 'application/json'},
@@ -42,7 +42,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
       }
       t.push(text[i])
     }
-    if(t.length) arr.push(t)
+    if(t && t.length) arr.push(t)
     let k=0;
     const [d,setD] = useState("");
     const handleChange = (id,value)=>{
@@ -92,7 +92,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
       
     }
     useEffect(()=>{
-      if(tempAns.length){
+      if(tempAns && tempAns.length){
         let ans = data
         tempAns.forEach((e)=>{
           ans.push(e);
@@ -163,7 +163,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
             </div>
          
          : 
-         data.length===0 ? <></> :
+         (data && data.length===0) ? <></> :
           <table className='data'>
           <tr className='data-row table-header'>
             <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
