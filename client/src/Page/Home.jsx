@@ -3,7 +3,7 @@ import Main from '../Components/Main'
 import HeroSection from '../Components/HeroSection'
 import GetPrescription from '../Components/GetPrescription'
 import { motion } from "framer-motion"
-import Loader from '../Components/Loader'
+// import Loader from '../Components/Loader'
 import MainBody from '../Components/MainBody'
 import Footer from '../Components/Footer'
 import LocalSearchResult from './LocalSearchResult'
@@ -34,12 +34,15 @@ const Home = () => {
       <HeroSection setText={setText} setData={setData} setLoder={setLoder}/>
       {
         text.length ?
-        <GetPrescription text={text} data={data} setData={setData} loader={loader} setLoder={setLoder}/>
+        <>
+        <GetPrescription text={text} data={data} setData={setData} loader={loader} setLoder={setLoder} searchResult={searchResult} setSearchResult={setSearchResult} />
+        
+        </>
         : 
         <>
         {
           searchResult.length ? <>
-            <LocalSearchResult netmeds={netmeds} setNetmeds={setNetmeds} apollopharmacy={apollopharmacy} setApollopharmacy={setApollopharmacy} oneMg = {oneMg} setOneMg={setOneMg} pharmeasy = {pharmeasy} setPharmeasy={setPharmeasy} searchResult={searchResult} />          
+            <LocalSearchResult  searchResult={searchResult} />          
           </> : 
           <>
           

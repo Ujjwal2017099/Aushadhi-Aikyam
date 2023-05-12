@@ -4,11 +4,14 @@ import Clear from '../assets/clear.png'
 import axios from 'axios'
 // import Main from './Main'
 import {Link} from 'react-router-dom'
-import { Audio } from 'react-loader-spinner'
+// import { Audio } from 'react-loader-spinner'
 import { URl } from './AxiosUtil'
 import Loader from './Loader'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import LocalSearchResult from '../Page/LocalSearchResult'
 
-const GetPrescription = ({text,loader,setLoder}) => {
+const GetPrescription = ({text,loader,setLoder,setSearchResult,searchResult}) => {
   // console.log(text);
     const token = JSON.parse(localStorage.getItem('id'));
     const [history,setHistory] = useState([]);
@@ -60,7 +63,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
     const handleChange = (id,value)=>{
       text[id] = value;
     }
-
+    const PIN = JSON.parse(localStorage.getItem('PIN'));
     const handleSubmit =  async (e)=>{
       e.preventDefault();
       // console.log(text);
@@ -73,6 +76,7 @@ const GetPrescription = ({text,loader,setLoder}) => {
       setApollopharmacyCnt(text.length)
       setPharmeasyCnt(text.length)
       setNetmedsCnt(text.length)
+      
       await text.forEach(async (e)=>{
         if(e.length){
           if(present){
@@ -145,7 +149,26 @@ const GetPrescription = ({text,loader,setLoder}) => {
               console.log(err);
             })
           
-
+            if(PIN && PIN.length !== 0){
+              const url = `${URl}/findProducts?title=${e}&pin=${PIN}`
+              const options = {
+                method : 'GET',
+                headers : {'content-type' : 'application/json'},
+                url
+              }
+              axios(options)
+              .then((res)=>{
+                let temp = searchResult;
+                res.data.forEach((element)=>{
+                  temp.push(element)
+                })
+                setSearchResult(temp);
+              }).catch((err)=>{
+                toast('Something went wrong')
+              })
+            }else{
+              toast('Enter valid PIN code')
+            }
 
         }else{
           setOneMgCnt(oneMgCnt-1)
@@ -214,6 +237,8 @@ const GetPrescription = ({text,loader,setLoder}) => {
         // console.log(pharmeasyF)
       }
     },[pharmeasy])
+
+
   return (
     <>
       <h2 className='extract-instruction' >*Remove the medicines that you don't want and check the spellings </h2>
@@ -257,110 +282,114 @@ const GetPrescription = ({text,loader,setLoder}) => {
 
             <button type="submit">Submit</button>
         </form>
+            <div style={{display:'flex',width:'100%',justifyContent:'center'}}>
+              <ToastContainer/>
+              <div>
 
+              
+              <span style={{display:'flex',flexDirection:'column',alignItems:'center'}} >
+                 {(netmedsF && netmedsF.length===0) ? <></> :
+                  <table className='data'>
+                  <tr className='data-row table-header'>
+                    <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+                    <td>Name</td>
+                    <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+                  </tr>
+                    {
+                      netmedsF.map((el)=>{
 
-         {(netmedsF && netmedsF.length===0) ? <></> :
-          <table className='data'>
-          <tr className='data-row table-header'>
-            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
-            <td>Name</td>
-            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
-          </tr>
-            {
-              netmedsF.map((el)=>{
-                
-                if(el.B_R!==404){
-                  return (
-                    <>
-                        <tr className='data-row'>
-                          <td><Link to={el.link} target='_blank'>Netmeds</Link></td>
-                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
-                          <td>{el.price}</td>
-                        </tr>
+                        if(el.B_R!==404){
+                          return (
+                            <>
+                                <tr className='data-row'>
+                                  <td><Link to={el.link} target='_blank'>Netmeds</Link></td>
+                                  <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                                  <td>{el.price}</td>
+                                </tr>
+                          
+                            </>
+                          )
+                        }
+                      })
+                    }
+                </table>}
+                 {(pharmeasyF && pharmeasyF.length===0) ? <></> :
+                  <table className='data'>
+                  <tr className='data-row table-header'>
+                    <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+                    <td>Name</td>
+                    <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+                  </tr>
+                    {
+                      pharmeasyF.map((el)=>{
 
-                    </>
-                  )
-                }
-              })
-            }
-        </table>}
-         {(pharmeasyF && pharmeasyF.length===0) ? <></> :
-          <table className='data'>
-          <tr className='data-row table-header'>
-            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
-            <td>Name</td>
-            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
-          </tr>
-            {
-              pharmeasyF.map((el)=>{
-                
-                if(el.B_R!==404){
-                  return (
-                    <>
-                        <tr className='data-row'>
-                          <td><Link to={el.link} target='_blank'>Pharmeasy</Link></td>
-                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
-                          <td>{el.price}</td>
-                        </tr>
+                        if(el.B_R!==404){
+                          return (
+                            <>
+                                <tr className='data-row'>
+                                  <td><Link to={el.link} target='_blank'>Pharmeasy</Link></td>
+                                  <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                                  <td>{el.price}</td>
+                                </tr>
+                          
+                            </>
+                          )
+                        }
+                      })
+                    }
+                </table>}
+                 {(apollopharmacyF && apollopharmacyF.length===0) ? <></> :
+                  <table className='data'>
+                  <tr className='data-row table-header'>
+                    <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+                    <td>Name</td>
+                    <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+                  </tr>
+                    {
+                      apollopharmacyF.map((el)=>{
 
-                    </>
-                  )
-                }
-              })
-            }
-        </table>}
-         {(apollopharmacyF && apollopharmacyF.length===0) ? <></> :
-          <table className='data'>
-          <tr className='data-row table-header'>
-            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
-            <td>Name</td>
-            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
-          </tr>
-            {
-              apollopharmacyF.map((el)=>{
-                
-                if(el.B_R!==404){
-                  return (
-                    <>
-                        <tr className='data-row'>
-                          <td><Link to={el.link} target='_blank'>Apollopharmacy</Link></td>
-                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
-                          <td>{el.price}</td>
-                        </tr>
+                        if(el.B_R!==404){
+                          return (
+                            <>
+                                <tr className='data-row'>
+                                  <td><Link to={el.link} target='_blank'>Apollopharmacy</Link></td>
+                                  <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                                  <td>{el.price}</td>
+                                </tr>
+                          
+                            </>
+                          )
+                        }
+                      })
+                    }
+                </table>}
+                 {(oneMgF && oneMgF.length===0) ? <></> :
+                  <table className='data'>
+                  <tr className='data-row table-header'>
+                    <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+                    <td>Name</td>
+                    <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+                  </tr>
+                    {
+                      oneMgF.map((el)=>{
 
-                    </>
-                  )
-                }
-              })
-            }
-        </table>}
-         {(oneMgF && oneMgF.length===0) ? <></> :
-          <table className='data'>
-          <tr className='data-row table-header'>
-            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
-            <td>Name</td>
-            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
-          </tr>
-            {
-              oneMgF.map((el)=>{
-                
-                if(el.B_R!==404){
-                  return (
-                    <>
-                        <tr className='data-row'>
-                          <td><Link to={el.link} target='_blank'>1mg</Link></td>
-                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
-                          <td>{el.price}</td>
-                        </tr>
-
-                    </>
-                  )
-                }
-              })
-            }
-        </table>}
-
-
+                        if(el.B_R!==404){
+                          return (
+                            <>
+                                <tr className='data-row'>
+                                  <td><Link to={el.link} target='_blank'>1mg</Link></td>
+                                  <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                                  <td>{el.price}</td>
+                                </tr>
+                          
+                            </>
+                          )
+                        }
+                      })
+                    }
+                </table>}
+              </span>
+              </div>
 
          {loader ?
             <div className='loader'>
@@ -368,9 +397,17 @@ const GetPrescription = ({text,loader,setLoder}) => {
             </div>
          
          : <></>
-         
          }
-    </>
+
+          {
+            (searchResult && searchResult.length !==0) &&
+            <div style={{width:'25%',height:"100%",borderLeft:'1px solid grey',display:'block',marginTop: '70px'}}>
+                <h3 style={{width:'100%',display:'flex',justifyContent:'center',fontFamily:'Poppins'}}>Local Chemist</h3>
+                <LocalSearchResult searchResult={searchResult} />
+            </div>
+          }
+      </div>
+      </>
   )
 }
 

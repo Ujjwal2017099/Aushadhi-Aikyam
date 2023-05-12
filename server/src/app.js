@@ -69,9 +69,14 @@ app.get('/',async (req,res)=>{
 })
 
 app.get("/pharmeasy" , async (req,res)=>{
+    const name = req.query.name;
+    const pharmeasyData = await Link.find({ name: 'pharmeasy' });
+    let str = pharmeasyData[0].url;
+    let arr = str.split("^");
+    str = arr[0] + name;
+    for (let i = 1; i < arr.length; i++) str += arr[i];
+    pharmeasyData[0].url = str;
     try {
-        const name = req.query.name;
-        const pharmeasyData = await Link.find({ name: 'pharmeasy' });
         if(pharmeasyData.length === 0 ) return res.sendStatus(501);
         if(pharmeasyData[0].isAPI){
             const arr = pharmeasyData[0].API.split('^');
@@ -102,6 +107,7 @@ app.get("/pharmeasy" , async (req,res)=>{
                     ans.push({
                         name: response.data.data.products[i].name,
                         price: response.data.data.products[i].mrpDecimal,
+                        link : pharmeasyData[0].url
                     });
                     i++;
                 }
@@ -109,23 +115,21 @@ app.get("/pharmeasy" , async (req,res)=>{
             }
         }
 
-        let str = pharmeasyData[0].url;
-        let arr = str.split("^");
-        str = arr[0] + name;
-        for (let i = 1; i < arr.length; i++) str += arr[i];
-        e.url = str;
+        
         // console.log(e);
+        
+    } catch (error) {
         let options = {
             mode: "text",
             pythonOptions: ["-u"],
             args: [
                 str,
-                e.mainContainer,
-                e.container,
-                e.bit,
-                e.priceContainer,
-                e.linkBit,
-                e.linkContainer,
+                pharmeasyData[0].mainContainer,
+                pharmeasyData[0].container,
+                pharmeasyData[0].bit,
+                pharmeasyData[0].priceContainer,
+                pharmeasyData[0].linkBit,
+                pharmeasyData[0].linkContainer,
             ],
         };
         let x = await PythonShell.run(
@@ -135,21 +139,20 @@ app.get("/pharmeasy" , async (req,res)=>{
                 if (err) console.log(err);
             }
         );
-        let temp = "";
-        for (let i = 0; i < x.length; i++) temp += x[i];
-        temp = JSON.parse(temp);
-        let company = e.name;
-        temp.forEach((e) => {
-            e.company = company;
-        });
-    } catch (error) {
-        return res.sendStatus(500);
+        x = JSON.parse(x);
+        res.status(200).send(x);
+        
     }
 });
 
 app.get("/apollopharmacy", async (req, res) => {
     const name = req.query.name;
     const apollopharmacyData = await Link.find({ name: "apollopharmacy" });
+    let str = apollopharmacyData[0].url;
+    let arr = str.split("^");
+    str = arr[0] + name;
+    for (let i = 1; i < arr.length; i++) str += arr[i];
+    apollopharmacyData[0].url = str;
     try {
         if (apollopharmacyData.length === 0) return res.sendStatus(501);
         if (apollopharmacyData[0].isAPI) {
@@ -183,6 +186,7 @@ app.get("/apollopharmacy", async (req, res) => {
                     ans.push({
                         name: response.data.pageProps.productsDetails[i].name,
                         price: response.data.pageProps.productsDetails[i].price,
+                        link: apollopharmacyData[0].url
                     });
                     i++;
                 }
@@ -193,11 +197,7 @@ app.get("/apollopharmacy", async (req, res) => {
         
         
     } catch (error) {
-        let str = apollopharmacyData[0].url;
-        let arr = str.split("^");
-        str = arr[0] + name;
-        for (let i = 1; i < arr.length; i++) str += arr[i];
-        apollopharmacyData[0].url = str;
+        
         // console.log(e);
         let options = {
             mode: "text",
