@@ -60,6 +60,7 @@ app.get('/',async (req,res)=>{
             if (ans.length===4) res.send(ans);
         })
         // console.log(ans);
+        
     } catch (error) {
         console.log(error);
         res.status(400).send("error");
@@ -147,9 +148,9 @@ app.get("/pharmeasy" , async (req,res)=>{
 });
 
 app.get("/apollopharmacy", async (req, res) => {
+    const name = req.query.name;
+    const apollopharmacyData = await Link.find({ name: "apollopharmacy" });
     try {
-        const name = req.query.name;
-        const apollopharmacyData = await Link.find({ name: "apollopharmacy" });
         if (apollopharmacyData.length === 0) return res.sendStatus(501);
         if (apollopharmacyData[0].isAPI) {
             const arr = apollopharmacyData[0].API.split("^");
@@ -189,23 +190,26 @@ app.get("/apollopharmacy", async (req, res) => {
             }
         }
 
+        
+        
+    } catch (error) {
         let str = apollopharmacyData[0].url;
         let arr = str.split("^");
         str = arr[0] + name;
         for (let i = 1; i < arr.length; i++) str += arr[i];
-        e.url = str;
+        apollopharmacyData[0].url = str;
         // console.log(e);
         let options = {
             mode: "text",
             pythonOptions: ["-u"],
             args: [
                 str,
-                e.mainContainer,
-                e.container,
-                e.bit,
-                e.priceContainer,
-                e.linkBit,
-                e.linkContainer,
+                apollopharmacyData[0].mainContainer,
+                apollopharmacyData[0].container,
+                apollopharmacyData[0].bit,
+                apollopharmacyData[0].priceContainer,
+                apollopharmacyData[0].linkBit,
+                apollopharmacyData[0].linkContainer,
             ],
         };
         let x = await PythonShell.run(
@@ -215,15 +219,8 @@ app.get("/apollopharmacy", async (req, res) => {
                 if (err) console.log(err);
             }
         );
-        let temp = "";
-        for (let i = 0; i < x.length; i++) temp += x[i];
-        temp = JSON.parse(temp);
-        let company = e.name;
-        temp.forEach((e) => {
-            e.company = company;
-        });
-    } catch (error) {
-        return res.sendStatus(500);
+        x = JSON.parse(x);
+        res.status(200).send(x);
     }
 });
 

@@ -13,6 +13,18 @@ const GetPrescription = ({text,loader,setLoder}) => {
     const token = JSON.parse(localStorage.getItem('id'));
     const [history,setHistory] = useState([]);
     const [present,setPresent] = useState(false);
+    const [pharmeasy,setPharmeasy] = useState([]);
+    const [oneMg,setOneMg] = useState([]);
+    const [netmeds,setNetmeds] = useState([]);
+    const [apollopharmacy,setApollopharmacy] = useState([]);
+    const [pharmeasyF,setPharmeasyF] = useState([]);
+    const [oneMgF,setOneMgF] = useState([]);
+    const [netmedsF,setNetmedsF] = useState([]);
+    const [apollopharmacyF,setApollopharmacyF] = useState([]);
+    const [oneMgCnt,setOneMgCnt] = useState(0);
+    const [onePharmeasyCnt,setPharmeasyCnt] = useState(0);
+    const [oneNetmedsCnt,setNetmedsCnt] = useState(0);
+    const [oneApollopharmacy,setApollopharmacyCnt] = useState(0);
 
     useEffect(()=>{
       if(token && token.length){
@@ -52,8 +64,15 @@ const GetPrescription = ({text,loader,setLoder}) => {
     const handleSubmit =  async (e)=>{
       e.preventDefault();
       // console.log(text);
-      setData([]);
+      setOneMgF([]);
+      setApollopharmacyF([]);
+      setPharmeasyF([]);
+      setNetmedsF([]);
       setLoder(true);
+      setOneMgCnt(text.length)
+      setApollopharmacyCnt(text.length)
+      setPharmeasyCnt(text.length)
+      setNetmedsCnt(text.length)
       await text.forEach(async (e)=>{
         if(e.length){
           if(present){
@@ -69,44 +88,135 @@ const GetPrescription = ({text,loader,setLoder}) => {
 
             })
           }
-          const url=`${URl}/?name=${e}`
+          const url1=`${URl}/pharmeasy?name=${e}`
+          const url2=`${URl}/apollopharmacy?name=${e}`
+          const url3=`${URl}/1mg?name=${e}`
+          const url4=`${URl}/netmeds?name=${e}`
           
-          try {
+          
              axios({
               method : 'GET',
-              url,
-              header : {"content-type" : 'application/json'}
+              header : {"content-type" : 'application/json'},
+              url : url1,
             }).then((res)=>{
-              console.log(res);
-              setAns(res.data);
+              // console.log(res);
+              // setAns(res.data);
+              setPharmeasy(res.data);
             }).catch((err)=>{
-
+              console.log(err);
             })
-          } catch (error) {
-            
-          }
+          
+          
+             axios({
+              method : 'GET',
+              header : {"content-type" : 'application/json'},
+              url :url2,
+            }).then((res)=>{
+              // console.log(res.data);
+              // setAns(res.data);
+              setApollopharmacy(res.data);
+            }).catch((err)=>{
+              console.log(err);
+            })
+          
+          
+             axios({
+              method : 'GET',
+              header : {"content-type" : 'application/json'},
+              url :url3,
+            }).then((res)=>{
+              // console.log(res);
+              // setAns(res.data);
+              setOneMg(res.data);
+            }).catch((err)=>{
+              console.log(err);
+            })
+          
+          
+             axios({
+              method : 'GET',
+              header : {"content-type" : 'application/json'},
+              url :url4,
+            }).then((res)=>{
+              // console.log(res);
+              // setAns(res.data);
+              setNetmeds(res.data);
+            }).catch((err)=>{
+              console.log(err);
+            })
+          
 
 
+        }else{
+          setOneMgCnt(oneMgCnt-1)
+          setApollopharmacyCnt(oneApollopharmacy-1)
+          setPharmeasyCnt(onePharmeasyCnt-1)
+          setNetmedsCnt(oneNetmedsCnt-1);
         }
       })
-      
+      // setLoder(false)
     }
     useEffect(()=>{
-      if(tempAns && tempAns.length){
-        let ans = data
-        tempAns.forEach((e)=>{
+      if(oneMgCnt===0 && oneApollopharmacy===0 && onePharmeasyCnt===0 && oneNetmedsCnt===0){
+        setLoder(false);
+      }
+    },[oneMgCnt,oneApollopharmacy,onePharmeasyCnt,oneNetmedsCnt])
+    useEffect(()=>{
+      if(netmeds && netmeds.length){
+        let ans = netmedsF
+        netmeds.forEach((e)=>{
           ans.push(e);
         })
-        setData(ans);
-        setAns([]);
-        setLoder(false)
-        console.log(data);
-        console.log(ans);
+        // ans.push(netmeds)
+        setNetmedsF(ans);
+        setNetmeds([]);
+        // console.log(netmedsF);
+        setNetmedsCnt(oneNetmedsCnt-1);
       }
-    },[tempAns])
+    },[netmeds])
+    useEffect(()=>{
+      if(oneMg && oneMg.length){
+        let ans = oneMgF
+        oneMg.forEach((e)=>{
+          ans.push(e);
+        })
+        // ans.push(oneMg);
+        // setData(ans);
+        setOneMgF(ans);
+        setOneMg([]);
+        // console.log(oneMgF)
+        setOneMgCnt(oneMgCnt-1)
+      }
+    },[oneMg])
+    useEffect(()=>{
+      if(apollopharmacy && apollopharmacy.length){
+        let ans = apollopharmacyF
+        apollopharmacy.forEach((e)=>{
+          ans.push(e);
+        })
+        // ans.push(apollopharmacy)
+        setApollopharmacyF(ans);
+        setApollopharmacy([]);
+        setApollopharmacyCnt(oneApollopharmacy-1)
+        // console.log(apollopharmacyF)
+      }
+    },[apollopharmacy])
+    useEffect(()=>{
+      if(pharmeasy && pharmeasy.length){
+        let ans = pharmeasyF
+        pharmeasy.forEach((e)=>{
+          ans.push(e);
+        })
+        // ans.push(pharmeasy);
+        setPharmeasyF(ans);
+        setPharmeasy([]);
+        setPharmeasyCnt(onePharmeasyCnt-1)
+        // console.log(pharmeasyF)
+      }
+    },[pharmeasy])
   return (
     <>
-      <h2 className='extract-instruction' >*Please remove the medicines you don't want and check the spellings and remove all the unwanted special characters (including " , ' etc.)</h2>
+      <h2 className='extract-instruction' >*Remove the medicines that you don't want and check the spellings </h2>
         <form className='extract-form shadow' onSubmit={handleSubmit} >
             <table className='extract-data-table' >
               {
@@ -147,23 +257,9 @@ const GetPrescription = ({text,loader,setLoder}) => {
 
             <button type="submit">Submit</button>
         </form>
-         {loader ?
-            <div className='loader'>
-                {/* <Audio
-                    height="80"
-                    width="80"
-                    radius="9"
-                    color="#3485E9"
-                    ariaLabel="loading"
-                    wrapperStyle
-                    wrapperClass
-                    
-                /> */}
-                <Loader/>
-            </div>
-         
-         : 
-         (data && data.length===0) ? <></> :
+
+
+         {(netmedsF && netmedsF.length===0) ? <></> :
           <table className='data'>
           <tr className='data-row table-header'>
             <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
@@ -171,26 +267,107 @@ const GetPrescription = ({text,loader,setLoder}) => {
             <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
           </tr>
             {
-              data.map((e)=>{
+              netmedsF.map((el)=>{
                 
-                return (
-                  <>
-                  {
-                    e.map((el)=>{
-                      if(el.B_R!==404){
-                        return <tr className='data-row'>
-                          <td><Link to={el.link} target='_blank'>{el.company}</Link></td>
+                if(el.B_R!==404){
+                  return (
+                    <>
+                        <tr className='data-row'>
+                          <td><Link to={el.link} target='_blank'>Netmeds</Link></td>
                           <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
                           <td>{el.price}</td>
                         </tr>
-                      }
-                    })
-                  }
-                  </>
-                )
+
+                    </>
+                  )
+                }
               })
             }
-        </table>
+        </table>}
+         {(pharmeasyF && pharmeasyF.length===0) ? <></> :
+          <table className='data'>
+          <tr className='data-row table-header'>
+            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+            <td>Name</td>
+            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+          </tr>
+            {
+              pharmeasyF.map((el)=>{
+                
+                if(el.B_R!==404){
+                  return (
+                    <>
+                        <tr className='data-row'>
+                          <td><Link to={el.link} target='_blank'>Pharmeasy</Link></td>
+                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                          <td>{el.price}</td>
+                        </tr>
+
+                    </>
+                  )
+                }
+              })
+            }
+        </table>}
+         {(apollopharmacyF && apollopharmacyF.length===0) ? <></> :
+          <table className='data'>
+          <tr className='data-row table-header'>
+            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+            <td>Name</td>
+            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+          </tr>
+            {
+              apollopharmacyF.map((el)=>{
+                
+                if(el.B_R!==404){
+                  return (
+                    <>
+                        <tr className='data-row'>
+                          <td><Link to={el.link} target='_blank'>Apollopharmacy</Link></td>
+                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                          <td>{el.price}</td>
+                        </tr>
+
+                    </>
+                  )
+                }
+              })
+            }
+        </table>}
+         {(oneMgF && oneMgF.length===0) ? <></> :
+          <table className='data'>
+          <tr className='data-row table-header'>
+            <td style={{borderRadius:'5px 0px 0px 0px'}}>Supplier</td>
+            <td>Name</td>
+            <td style={{borderRadius:'0px 5px 0px 0px'}}>Cost</td>
+          </tr>
+            {
+              oneMgF.map((el)=>{
+                
+                if(el.B_R!==404){
+                  return (
+                    <>
+                        <tr className='data-row'>
+                          <td><Link to={el.link} target='_blank'>1mg</Link></td>
+                          <td><Link to={el.link} target='_blank'>{el.name}</Link></td>
+                          <td>{el.price}</td>
+                        </tr>
+
+                    </>
+                  )
+                }
+              })
+            }
+        </table>}
+
+
+
+         {loader ?
+            <div className='loader'>
+                <Loader/>
+            </div>
+         
+         : <></>
          
          }
     </>
