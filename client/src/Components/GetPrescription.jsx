@@ -28,6 +28,7 @@ const GetPrescription = ({text,loader,setLoder,setSearchResult,searchResult}) =>
     const [onePharmeasyCnt,setPharmeasyCnt] = useState(0);
     const [oneNetmedsCnt,setNetmedsCnt] = useState(0);
     const [oneApollopharmacy,setApollopharmacyCnt] = useState(0);
+    
 
     useEffect(()=>{
       if(token && token.length){
@@ -152,6 +153,31 @@ const GetPrescription = ({text,loader,setLoder,setSearchResult,searchResult}) =>
             })
           
             if(PIN && PIN.length !== 0){
+              axios({
+                method : 'GET',
+                headers : {'content-type' : 'application/json'},
+                url : `${URl}/autoCorrect?name=${e}`
+              }).then((res)=>{
+                // setSearch(res.data);
+                console.log(res.data);
+                const medicineName = res.data;
+                axios({
+                  method : 'GET',
+                  headers : {'content-type' : 'application/json'},
+                  url : `${URl}/findProducts?title=${medicineName}&pin=${PIN}`
+                }).then((res)=>{
+                  let temp = searchResult;
+                  res.data.forEach((element)=>{
+                    temp.push(element)
+                  })
+                  setSearchResult(temp);
+                }).catch((err)=>{
+                  
+                })
+              })
+              .catch((err)=>{
+              
+              })
               const url = `${URl}/findProducts?title=${e}&pin=${PIN}`
               const options = {
                 method : 'GET',
@@ -390,16 +416,18 @@ const GetPrescription = ({text,loader,setLoder,setSearchResult,searchResult}) =>
                       })
                     }
                 </table>}
+                    {loader ?
+                        <div className='loader'>
+                            <Loader/>
+                        </div>
+                     
+                     : <></>
+                     }
+              
               </span>
               </div>
 
-         {loader ?
-            <div className='loader'>
-                <Loader/>
-            </div>
          
-         : <></>
-         }
 
           {
             (searchResult && searchResult.length !==0) &&

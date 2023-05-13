@@ -3,6 +3,7 @@ import LocalSearchCard from '../Components/LocalSearchCard'
 
 
 const LocalSearchResult = ({searchResult}) => {
+  console.log(searchResult);
     const style= {display:'inline-block',margin:'10px 15px'}
   return (
     <div style={{width:'100%' , minHeight:'580px', boxSizing:'border-box',padding:'20px 20px'}}>

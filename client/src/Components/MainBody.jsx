@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React , {useState,useEffect} from 'react'
 import './mainBody.css'
 import card1 from '../assets/doctor.jpg'
 import { URl } from './AxiosUtil'
@@ -9,9 +9,22 @@ import 'react-toastify/dist/ReactToastify.css';
 const MainBody = ({searchResult,setSearchResult}) => {
   const [pin,setPin] = useState('');
   const [med,setMed] = useState('');
-  
+  const [tempData,setTempData] = useState([]);
+  useEffect(()=>{
+    if(tempData && tempData.length){
+      let x = searchResult;
+      tempData.forEach((e)=>{
+        x.push(e);
+      })
+      // setSearchResult(x);
+      console.log(searchResult);
+      setTempData([]);
+    }
+  },[tempData])
   const handleSubmit = (e)=>{
     e.preventDefault();
+    setSearchResult([])
+    setTempData([]);
     const testPin = /^\d{6}$/
     if(testPin.test(pin)){
       localStorage.setItem('PIN',pin)
@@ -24,6 +37,34 @@ const MainBody = ({searchResult,setSearchResult}) => {
     const PIN = JSON.parse(localStorage.getItem('PIN'));
 
     if(PIN && PIN.length !== 0){
+
+      // axios({
+      //   method : 'GET',
+      //   headers : {'content-type' : 'application/json'},
+      //   url : `${URl}/autoCorrect?name=${med}`
+      // }).then((res)=>{
+      //   // setSearch(res.data);
+      //   console.log(res.data + " " + pin);
+      //   const medicineName = res.data;
+      //   axios({
+      //     method : 'GET',
+      //     headers : {'content-type' : 'application/json'},
+      //     url : `${URl}/findProducts?title=${medicineName}&pin=${pin}`
+      //   }).then((res)=>{
+      //     // console.log(res.data);
+      //     // const temp = searchResult ;
+      //     // res.data.forEach((e)=>{
+      //     //   temp.push(e);
+      //     // })
+      //     setSearchResult(res.data);
+      //     // setTempData(res.data);
+      //   }).catch((err)=>{
+        
+      //   })
+      // })
+      // .catch((err)=>{
+
+      // })
       const url = `${URl}/findProducts?title=${med}&pin=${PIN}`
       const options = {
         method : 'GET',
@@ -32,13 +73,21 @@ const MainBody = ({searchResult,setSearchResult}) => {
       }
       axios(options)
       .then((res)=>{
-        setSearchResult(res.data);
+        // const temp = searchResult ;
+          // res.data.forEach((e)=>{
+          //   temp.push(e);
+          // })
+          // temp.push(res.data);
+          // console.log(res.data);
+          // setTempData(res.data);
+          setSearchResult(res.data);
       }).catch((err)=>{
         toast('Something went wrong')
       })
     }else{
       toast('Enter valid PIN code')
     }
+
   }
   return (
     <>

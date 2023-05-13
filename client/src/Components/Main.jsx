@@ -23,14 +23,17 @@ const Main = ({loader,setLoder,netmeds,setNetmeds,apollopharmacy,setApollopharma
 
   
   useEffect(()=>{
-    const temp = finalLocalResult;
-    // console.log(temp);
-    localResult.forEach((e)=>{
-      temp.push(e);
-    })
-    setFinalLocalResult(temp);
-    console.log(finalLocalResult);
-    // console.log(localResult);
+    if(localResult && localResult.length) {
+      const temp = finalLocalResult;
+      // console.log(temp);
+      localResult.forEach((e)=>{
+        temp.push(e);
+      })
+      setFinalLocalResult(temp);
+      console.log(finalLocalResult);
+      setLocalResult([])
+      // console.log(localResult);
+    }
     
   },[localResult])
 
