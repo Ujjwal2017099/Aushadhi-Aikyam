@@ -1,6 +1,45 @@
 # token : 6084023169:AAEqy_Vki3Jbyi5OWOyr6zZXlZ7ObOBN-0A
 TOKEN = "6084023169:AAEqy_Vki3Jbyi5OWOyr6zZXlZ7ObOBN-0A"
 
+import sys
+def detect_text(path):
+    """Detects text in the file."""
+    from google.cloud import vision
+    import io
+    client = vision.ImageAnnotatorClient()
+
+    with io.open(path, 'rb') as image_file:
+        content = image_file.read()
+
+    image = vision.Image(content=content)
+
+    response = client.text_detection(image=image)
+    # print(response)
+    texts = response.text_annotations
+    
+    s = ''
+
+    for text in texts:
+        if (len(text.description) >= 5):
+            s += ('\n"{}"'.format(text.description))
+            s += '\n\n'
+
+            # vertices = (['({},{})'.format(vertex.x, vertex.y)
+            #             for vertex in text.bounding_poly.vertices])
+
+            # print('bounds: {}'.format(','.join(vertices)))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
+    
+    return s
+    
+# -----------------------------------------------------------------------------
+
+
 import re, json
 import bs4
 from bs4 import BeautifulSoup
@@ -10,8 +49,8 @@ from selenium.webdriver.chrome.service import Service
 
 def get_med_data(url=None, med_container_class=None, med_name_class=None, price_bit=None, med_price_container=None, link_bit=None, link_container=None):
         options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
         s = Service('./chromedriver.exe')
         driver = webdriver.Chrome(service=s, options=options)
 
@@ -83,7 +122,6 @@ def get_med_data(url=None, med_container_class=None, med_name_class=None, price_
 # ----------------------------------------------------------------------------
 
 import telebot
-from vision_ocr import detect_text
 from pymongo import MongoClient
 import json
 
@@ -123,7 +161,8 @@ def med_data(message):
     bot.reply_to(message, 'Processing ....')
     name = message.text
     flag = 0
-    for item in rec_list:
+    for i in range(len(rec_list)):
+        item = rec_list[i];
         url = item['url'].replace('^', name)
         med_container_class = item['mainContainer']
         med_name_class = item['container']
@@ -134,7 +173,7 @@ def med_data(message):
 
 
         res = get_med_data(url, med_container_class, med_name_class, bit,
-                                   med_price_container, link_bit, link_container)
+                            med_price_container, link_bit, link_container)
         if (res == 'BR' or (not len(res))):
             flag = 0
             continue
@@ -145,7 +184,7 @@ def med_data(message):
         bot.reply_to(message, s)
 
         flag = 1
-        if flag:
+        if flag and (i < (len(rec_list)-1)):
             bot.reply_to(message, 'Getting data from next site ....')
 
     bot.reply_to(message, 'FINISHED !!!')

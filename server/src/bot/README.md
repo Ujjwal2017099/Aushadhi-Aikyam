@@ -1,4 +1,19 @@
-<h1>This is the code for telegram chat bot </h1>
+<h1>Telegram Chatbot </h1>
 
-It also provide same services as the website to implement it make sure pyhton is installed
-> Install pyTelegramBotAPI , bs4 and selenium
+### Features:
+* Upload Prescription and get medicine names 
+* Enter medicine name and get result from different websites
+
+### Advantages: 
+* User Friendly
+* Interactiveness
+* 24/7 Availability
+
+### Pre-requisites:
+> Install [Python version : 3.9.11](https://www.python.org/downloads/release/python-3911/)
+> 
+>Install [pyTelegramBotAPI](https://pypi.org/project/pyTelegramBotAPI/), [bs4](https://pypi.org/project/beautifulsoup4/) and [selenium](https://pypi.org/project/selenium/) via pip
+>
+>Set up [google cloud CLI](https://cloud.google.com/sdk/docs/initializing)
+>
+>Enable the [Cloud Vision API](https://cloud.google.com/vision/docs/ocr#vision_text_detection-python)
