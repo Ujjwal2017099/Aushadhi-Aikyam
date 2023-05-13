@@ -32,6 +32,14 @@ const linkSchema = new mongoose.Schema({
     linkContainer : {
         type : String,
         required : true
+    },
+    isAPI : {
+        type : Boolean,
+        default : false,
+        required : true
+    },
+    API : {
+        type : String
     }
 });
 

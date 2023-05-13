@@ -18,8 +18,10 @@ def detect_text(path):
     flag=1
     for text in texts:
         if flag:
-            continue
+
             flag=0
+            continue
+
         if (len(text.description) >= 5):
             print('\n"{}"'.format(text.description))
 

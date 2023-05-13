@@ -8,7 +8,7 @@ const Avatar = ({Name}) => {
         borderRadius:'50%',
         fontSize : '30px',
         fontFamily : 'Poppins',
-        backgroundColor : '#F7941D',
+        // backgroundColor : '#F7941D',
         display:'flex',
         alignItems:'center',
         justifyContent:'center',
@@ -16,8 +16,11 @@ const Avatar = ({Name}) => {
     }
   return (
     <div  style={{width:'30%'}}>
-        <div className='shadow'style={style}>
+        {/* <div className='shadow'style={style}> */}
+          <div className='logout-btn' style={{width:'45px',height:'45px',borderRadius:'50%'}}>
+
             {Name[0]}
+          {/* </div> */}
         </div>
     </div>
   )

@@ -6,6 +6,7 @@ import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import { motion } from "framer-motion"
 import { URl } from '../Components/AxiosUtil'
+import { Link } from 'react-router-dom'
 
 const Signup = () => {
     const [email , setEmail] = useState("");
@@ -57,8 +58,9 @@ const Signup = () => {
                     <input type="email" name="Email" placeholder='Email' id="" value={email} onChange={(e)=>{ setEmail(e.target.value)}} required/>
                     <input type="password" name="Password" placeholder='Password' id="" value={password} onChange={(e)=>{setPassword(e.target.value)}} required/>
                     <button type="submit">Submit</button>
-                    <p>By proceeding, you agree to the Terms &
-                        Conditions and Privacy Policy.</p>
+                    <p>By proceeding, you agree to the <Link to="/terms"> Terms &
+                        Conditions and Privacy Policy.</Link></p>
+                    <p>Already have an account <Link to="/login">click here</Link> to logIn</p>
                 </form>
             </div>
         </div>
